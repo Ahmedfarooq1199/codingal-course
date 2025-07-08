@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h2> Javascript</h2>
+        <h2> array </h2>
+        <p>Welcome to Pakistan</p>
+
+
+        <p id="Myjoin"></p>
+        <p id="originalArray"></p>
+        <p id="myfirstpop"></p>
+
+        <script>
+            var fruits = ["Apple", "Banana", "Orange", "Mango"];
+            document.getElementById("Myjoin").innerHTML = fruits.join(" * ");
+            document.getElementById("originalArray").innerHTML = fruits;
+
+            var firstPop = fruits.pop();
+            document.getElementById("myfirstpop").innerHTML = fruits;
+
+            fruits.push("Pineapple");
+            document.write(fruits);
+        </script>
+
+
+        
+    </body>
+</html>
