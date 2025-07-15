@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🌟Pakistan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      padding: 25px;
+    }
+
+    h1 {
+      color: #007BFF;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-top: 30px;
+    }
+
+    pre {
+      background: #eef1f4;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 14px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .output {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 Pakistan is strongest country in muslim world🚀 </h1>
+
+  <!-- Methods Section -->
+  <h2>🔹 Methods</h2>
+  <p>A <strong>method</strong> is a function stored inside an object.</p>
+  <pre>
+let person = {
+  name: "Ali",
+  greet: function() {
+    return "Hello, my name is " + this.name;
+  }
+};
+console.log(person.greet());</pre>
+  <button onclick="showMethod()">Run Method</button>
+  <div class="output" id="methodOutput"></div>
+
+  <!-- Loops Section -->
+  <h2>🔹 Loops</h2>
+  <p>Loops let you run code again and again.</p>
+  <p><strong>For loop example:</strong></p>
+  <pre>
+for (let i = 1; i <= 5; i++) {
+  console.log("Number: " + i);
+}</pre>
+  <button onclick="showLoop()">Run Loop</button>
+  <div class="output" id="loopOutput"></div>
+
+  <!-- Switch Section -->
+  <h2>🔹 Switch Statement</h2>
+  <p>The <strong>switch</strong> statement checks different cases.</p>
+  <pre>
+let day = "Monday";
+switch (day) {
+  case "Monday":
+    console.log("Start of the week!");
+    break;
+  case "Friday":
+    console.log("Weekend is near!");
+    break;
+  default:
+    console.log("Just another day.");
+}</pre>
+  <button onclick="showSwitch()">Run Switch</button>
+  <div class="output" id="switchOutput"></div>
+
+  <!-- JavaScript Section -->
+  <script>
+    function showMethod() {
+      let person = {
+        name: "Ali",
+        greet: function() {
+          return "Hello, my name is " + this.name;
+        }
+      };
+      document.getElementById("methodOutput").innerText = person.greet();
+    }
+
+    function showLoop() {
+      let result = "";
+      for (let i = 1; i <= 5; i++) {
+        result += "Number: " + i + "\n";
+      }
+      document.getElementById("loopOutput").innerText = result;
+    }
+
+    function showSwitch() {
+      let day = "Monday";
+      let message;
+      switch (day) {
+        case "Monday":
+          message = "Start of the week!";
+          break;
+        case "Friday":
+          message = "Weekend is near!";
+          break;
+        default:
+          message = "Just another day.";
+      }
+      document.getElementById("switchOutput").innerText = message;
+    }
+  </script>
+
+</body>
+</html>
