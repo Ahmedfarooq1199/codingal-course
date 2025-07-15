@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>pakistan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 30px;
+      color: #333;
+    }
+
+    h1 {
+      color: #007bff;
+    }
+
+    .box {
+      width: 150px;
+      height: 100px;
+      padding: 10px;
+      color: #fff;
+      text-align: center;
+      line-height: 80px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .static {
+      background-color: #6c757d;
+      position: static;
+    }
+
+    .relative {
+      background-color: #17a2b8;
+      position: relative;
+      left: 30px;
+      top: 20px;
+    }
+
+    .absolute-wrapper {
+      position: relative;
+      background-color: #eee;
+      height: 150px;
+      margin-bottom: 50px;
+    }
+
+    .absolute {
+      background-color: #28a745;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    .fixed {
+      background-color: #dc3545;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .sticky-container {
+      height: 200px;
+      overflow: auto;
+      border: 2px solid #ccc;
+      padding: 10px;
+      margin-bottom: 40px;
+    }
+
+    .sticky {
+      background-color: #ffc107;
+      position: sticky;
+      top: 0;
+      padding: 10px;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📍 Lahore </h1>
+
+  <p>CSS positioning allows you to control where elements appear on the page. Below are examples of different positioning types:</p>
+
+  <!-- Static -->
+  <h2>🔹 Static (default)</h2>
+  <div class="box static">Static</div>
+
+  <!-- Relative -->
+  <h2>🔹 Relative</h2>
+  <div class="box relative">Relative</div>
+
+  <!-- Absolute -->
+  <h2>🔹 Absolute (inside relative wrapper)</h2>
+  <div class="absolute-wrapper">
+    <div class="box absolute">Absolute</div>
+  </div>
+
+  <!-- Fixed -->
+  <h2>🔹 Fixed</h2>
+  <p>The fixed box stays in the top-right corner, even when scrolling!</p>
+  <div class="box fixed">Fixed</div>
+
+  <!-- Sticky -->
+  <h2>🔹 Sticky</h2>
+  <p>Scroll inside the box below to see sticky behavior:</p>
+  <div class="sticky-container">
+    <div class="sticky">Sticky Header</div>
+    <p>Scroll down to see sticky element stay at the top.</p>
+    <p>Lorem ipsum dolor sit amet.</p>
+    <p>Consectetur adipiscing elit.</p>
+    <p>Sed do eiusmod tempor incididunt.</p>
+    <p>Ut labore et dolore magna aliqua.</p>
+    <p>Ut enim ad minim veniam.</p>
+    <p>Exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>
+    <p>Duis aute irure dolor in reprehenderit.</p>
+    <p>Velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>Excepteur sint occaecat cupidatat non proident.</p>
+  </div>
+
+</body>
+</html>
