@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Introduction to JavaScript Objects</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 25px;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    h2 {
+      color: #34495e;
+      margin-top: 30px;
+    }
+    p {
+      font-size: 16px;
+    }
+    pre {
+      background-color: #eef1f4;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 14px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #219150;
+    }
+    .output {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #2d862d;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 one ummah 🧠</h1>
+
+  <p>In JavaScript, an <strong>object</strong> is a collection of properties. Each property has a name (key) and a value.</p>
+
+  <h2>🔹 Pakistan zindabad</h2>
+  <p>This is how we create an object:</p>
+
+  <pre>
+let person = {
+  name: "ahmed",
+  age: 15,
+  city: "Lahore"
+};
+
+console.log(person.name); // shows "Ali"
+  </pre>
+
+  <button onclick="showObject()">Show Object Info</button>
+  <div class="output" id="objectOutput"></div>
+
+  <h2>🔹 Add or Change Properties</h2>
+  <p>You can also add or change values in an object:</p>
+
+  <pre>
+person.age = 21;
+person.country = "Pakistan";
+  </pre>
+
+  <button onclick="modifyObject()">Modify Object</button>
+  <div class="output" id="modifiedOutput"></div>
+
+  <!-- JavaScript Section -->
+  <script>
+    let person = {
+      name: "Ali",
+      age: 20,
+      city: "Lahore"
+    };
+
+    function showObject() {
+      document.getElementById("objectOutput").innerText =
+        "Name: " + person.name + ", Age: " + person.age + ", City: " + person.city;
+    }
+
+    function modifyObject() {
+      person.age = 21;
+      person.country = "Pakistan";
+      document.getElementById("modifiedOutput").innerText =
+        "Updated Age: " + person.age + ", Country: " + person.country;
+    }
+  </script>
+
+</body>
+</html>
