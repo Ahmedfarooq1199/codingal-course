@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>pakistan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    /* Advanced Selectors */
+    ul li:first-child {
+      color: green;
+      font-weight: bold;
+    }
+
+    ul li:last-child {
+      color: red;
+    }
+
+    ul li:nth-child(odd) {
+      background-color: #e6f7ff;
+    }
+
+    /* Pseudo Classes */
+    a:hover {
+      color: white;
+      background-color: #007bff;
+      text-decoration: none;
+    }
+
+    input:focus {
+      border: 2px solid #28a745;
+      outline: none;
+    }
+
+    /* Pseudo Elements */
+    p::first-line {
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    p::before {
+      content: "→ ";
+      color: #28a745;
+    }
+
+    p::after {
+      content: " ✅";
+      color: #28a745;
+    }
+
+    a, input {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px;
+    }
+
+    code {
+      background-color: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Lahore</h1>
+
+  <!-- Advanced Selectors -->
+  <section>
+    <h2>🔹 Advanced Selectors</h2>
+    <p>Target specific elements using selectors like <code>:first-child</code>, <code>:last-child</code>, and <code>:nth-child()</code>:</p>
+    <ul>
+      <li>Item 1 (first-child)</li>
+      <li>Item 2 (even)</li>
+      <li>Item 3 (odd)</li>
+      <li>Item 4 (even)</li>
+      <li>Item 5 (last-child)</li>
+    </ul>
+  </section>
+
+  <!-- Pseudo Classes -->
+  <section>
+    <h2>🔹 Pseudo-Classes</h2>
+    <p>Style elements in a certain state like <code>:hover</code> or <code>:focus</code>:</p>
+    <a href="#">Hover Over This Link</a><br>
+    <input type="text" placeholder="Click here (focus)">
+  </section>
+
+  <!-- Pseudo Elements -->
+  <section>
+    <h2>🔹 Pseudo-Elements</h2>
+    <p>Use <code>::before</code>, <code>::after</code>, and <code>::first-line</code> to style parts of an element:</p>
+    <p>This paragraph demonstrates pseudo-elements. The first line is bold and blue, and symbols are added before and after the text.</p>
+  </section>
+
+</body>
+</html>
