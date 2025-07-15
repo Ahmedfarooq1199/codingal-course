@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ISLaMic country</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    pre {
+      background-color: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    button {
+      padding: 8px 15px;
+      margin-top: 10px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .output {
+      margin-top: 15px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>welcome to pakistan</h1>
+  <p>The <strong>HTML DOM</strong> is a programming interface for HTML and XML documents. It represents the structure of a document as a tree of objects. With the DOM, JavaScript can access and manipulate elements, attributes, and content of HTML.</p>
+
+  <h2>Example: Access and Change Text</h2>
+
+  <p id="demo">This is original text.</p>
+  <button onclick="changeText()">Click to Change Text</button>
+
+  <div class="output" id="output"></div>
+
+  <h3>JavaScript Code:</h3>
+  <pre>
+function changeText() {
+  const element = document.getElementById("demo");
+  element.innerHTML = "The text has been changed using DOM!";
+  document.getElementById("output").innerText = "Text successfully changed.";
+}
+  </pre>
+
+  <script>
+    function changeText() {
+      const element = document.getElementById("demo");
+      element.innerHTML = "The text has been changed using DOM!";
+      document.getElementById("output").innerText = "Text successfully changed.";
+    }
+  </script>
+
+</body>
+</html>
