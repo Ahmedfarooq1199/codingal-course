@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <p>Welcome to the classwork assignment for Lesson 3, Activity 2.</p>
+        <p id="product_value"></p>
+
+        <script>
+            var numbers = [10, 2, 3, 4, 5];
+            function myfunction(num) {
+                return num * 10;
+            }
+            var newarray = numbers.map(myfunction);
+            document.getElementById("product_value").innerHTML = newarray;
+        </script>
+    </body>
+</html>
