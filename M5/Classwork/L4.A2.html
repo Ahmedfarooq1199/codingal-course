@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h2>Classwork: L4.A2</h2>
+        <p>Welcome to the classwork assignment for Lesson 4, Activity 2.</p>
+        <p id="error_message"></p>
+        <script>
+            try{
+                addalert("Welcome")
+
+            }
+            catch(err){
+                document.getElementById("error_message").innerHTML = "Error: " + err.message;
+            }
+        </script>
+        
+    </body>
