@@ -1,0 +1,13 @@
+body {
+    background-color: #190c0c;
+    font-family: Arial, sans-serif;
+    scroll-behavior: smooth;
+}
+.navigation-link {
+    border: 2px solid transparent;
+}
+.navigation-link:hover {
+    text-decoration: underline;
+    border-bottom: 2px solid blue;
+    transition: 0.5s ease;
+}

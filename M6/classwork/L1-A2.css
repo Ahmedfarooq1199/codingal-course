@@ -1,0 +1,20 @@
+body{
+    background-color: blueviolet;
+    font-family: Arial, sans-serif;
+    scroll-behavior: smooth;
+}
+.m-heading{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+.main-container{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-position:url('download.jpeg');
+    background-attachment: fixed ;
+    background-size: cover;
+
+}
