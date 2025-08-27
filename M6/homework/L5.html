@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ahmed farooq Class 10</title>
+  <style>
+    :root{
+      --primary:#0d47a1;
+      --secondary:#1976d2;
+      --accent:#43a047;
+      --light:#f4f6f9;
+      --dark:#1c1c1c;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:Segoe UI, Inter, system-ui;
+      background:var(--light);
+      color:var(--dark);
+    }
+
+    .wrap{
+      width:min(960px,96vw);
+      padding:2rem;
+      display:grid;
+      grid-template-columns:1fr 380px;
+      gap:1.5rem;
+    }
+    @media(max-width:880px){ .wrap{grid-template-columns:1fr} }
+
+    .card{
+      background:#fff;
+      border-radius:12px;
+      padding:1.5rem;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+      border:1px solid #e0e0e0;
+    }
+
+    h1{margin:0 0 .5rem; font-size:1.4rem; color:var(--primary)}
+    p.lead{margin:0;color:#555}
+
+    form{display:grid; gap:1rem; margin-top:1rem}
+    label{font-weight:600; font-size:.9rem}
+    input[type=number], select{
+      width:100%; padding:.6rem .75rem;
+      border-radius:6px; border:1px solid #ccc;
+      background:#fafafa;
+      color:#111;
+    }
+    .row{display:flex; gap:1rem}
+    .row>*{flex:1}
+
+    .result{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem; text-align:center}
+    .amount{font-size:2rem; font-weight:800; color:var(--secondary)}
+    .sub{color:#555; font-size:1rem}
+
+    .actions{display:flex; gap:.8rem; margin-top:.5rem}
+    button{
+      cursor:pointer;
+      padding:.7rem 1.2rem;
+      border-radius:6px;
+      border:none;
+      font-weight:600;
+      transition:all .2s ease;
+    }
+    .btn-primary{background:var(--secondary); color:#fff}
+    .btn-primary:hover{background:var(--primary)}
+    .btn-ghost{background:#fff; border:1px solid #ccc; color:#333}
+
+    .meter{width:100%; height:10px; border-radius:999px; background:#eee; overflow:hidden; margin-top:1rem}
+    .meter>i{display:block; height:100%; width:0%; background:var(--accent); transition:width 600ms ease}
+
+    .muted{color:#777; font-size:.85rem}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Pakistan Zindabad</h1>
+      <p class="lead">Calculate your annual bonus with bank-grade accuracy and professional reporting.</p>
+
+      <form id="calcForm">
+        <label for="base">Base Salary (USD)</label>
+        <input id="base" type="number" min="0" value="60000" step="100" required>
+
+        <div class="row">
+          <div>
+            <label for="rating">Performance</label>
+            <select id="rating">
+              <option value="0.6">Below</option>
+              <option value="0.8">Meets</option>
+              <option value="1">Exceeds</option>
+              <option value="1.25">Outstanding</option>
+              <option value="1.5" selected>Exceptional</option>
+            </select>
+          </div>
+          <div>
+            <label for="basePct">Base Bonus %</label>
+            <input id="basePct" type="number" min="0" max="100" value="10">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="tenure">Years</label>
+            <input id="tenure" type="number" min="0" value="2">
+          </div>
+          <div>
+            <label for="mult">Tenure % / year</label>
+            <input id="mult" type="number" min="0" value="1">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" id="calcBtn" type="button">Calculate</button>
+          <button class="btn-ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+
+        <div class="meter"><i id="meterFill"></i></div>
+      </form>
+    </div>
+
+    <aside class="card result">
+      <div class="sub">Your Bonus</div>
+      <div class="amount" id="amount">$0.00</div>
+      <div class="sub" id="details">—</div>
+      <div style="width:100%; margin-top:1rem; display:flex; gap:.5rem; justify-content:center">
+        <div class="card" style="padding:.6rem .8rem; min-width:120px; text-align:center">
+          <div class="muted">Base Bonus</div>
+          <div id="bb" style="font-weight:800">$0.00</div>
+        </div>
+        <div class="card" style="padding:.6rem .8rem; min-width:120px; text-align:center">
+          <div class="muted">Tenure Add</div>
+          <div id="ta" style="font-weight:800">$0.00</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const $ = id=>document.getElementById(id);
+    const fmt = n=>'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+
+    const base=$('base'),rating=$('rating'),basePct=$('basePct');
+    const tenure=$('tenure'),mult=$('mult');
+    const amount=$('amount'),details=$('details');
+    const bb=$('bb'),ta=$('ta'),meter=$('meterFill');
+
+    function animateNumber(el,start,end,dur=600){
+      const s=performance.now();const diff=end-start;
+      function step(t){
+        let k=Math.min(1,(t-s)/dur);
+        let val=start+diff*k;
+        el.textContent=fmt(val);
+        if(k<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function calc(){
+      const b=+base.value||0,r=+rating.value||1,p=+basePct.value||0,t=+tenure.value||0,m=+mult.value||0;
+      if(b<=0){alert('Base salary must be greater than 0');return;}
+      const baseBonus=b*(p/100)*r;
+      const tenureAdd=baseBonus*(t*(m/100));
+      const total=baseBonus+tenureAdd;
+
+      animateNumber(amount,+amount.textContent.replace(/[^0-9.]/g,''),total);
+      animateNumber(bb,0,baseBonus);
+      animateNumber(ta,0,tenureAdd);
+      details.textContent=`Performance ×${r}, Tenure ${t} yrs`;
+      meter.style.width=Math.min(100,(p/50)*100)+'%';
+    }
+
+    $('calcBtn').onclick=calc;
+    $('resetBtn').onclick=()=>{
+      base.value=60000;rating.value=1.5;basePct.value=10;tenure.value=2;mult.value=1;
+      amount.textContent='$0.00';bb.textContent='$0.00';ta.textContent='$0.00';details.textContent='—';meter.style.width='0%'
+    };
+    window.onload=calc;
+  </script>
+</body>
+</html>
