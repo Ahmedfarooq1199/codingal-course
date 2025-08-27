@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ahmed farooq</title>
+  <style>
+    :root{ --bg:#0f1724; --card:#0b1220; --accent:#10b981; --muted:#94a3b8; --glass: rgba(255,255,255,0.04)}
+    *{box-sizing:border-box}
+    body{margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; font-family:Inter, system-ui, Arial; background: linear-gradient(180deg,#071021 0%, #0b1630 60%); color:#e6eef6}
+    .wrap{width:min(920px,94vw); padding:2rem; display:grid; grid-template-columns: 1fr 360px; gap:1.5rem}
+    @media(max-width:880px){ .wrap{grid-template-columns:1fr} }
+
+    /* Card */
+    .card{background:linear-gradient(180deg,var(--card), #07101a); border-radius:14px; padding:1.25rem; box-shadow:0 8px 30px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03)}
+    h1{margin:0 0 .5rem; font-size:1.25rem}
+    p.lead{margin:0;color:var(--muted)}
+
+    /* Form */
+    form{display:grid; gap:.75rem; margin-top:1rem}
+    label{font-weight:600; font-size:.9rem}
+    input[type=number], select{width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:var(--glass); color:inherit}
+    .row{display:flex; gap:.75rem}
+    .row > *{flex:1}
+
+    /* Result box */
+    .result{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem; text-align:center}
+    .amount{font-size:2.25rem; font-weight:800; letter-spacing:-0.02em}
+    .sub{color:var(--muted); font-size:.95rem}
+
+    /* Buttons */
+    .actions{display:flex; gap:.6rem; margin-top:.5rem}
+    button{cursor:pointer; padding:.7rem 1rem; border-radius:10px; border:none; font-weight:700}
+    .btn-primary{background:linear-gradient(180deg,var(--accent), #059669); color:#04211a}
+    .btn-ghost{background:transparent; border:1px solid rgba(255,255,255,0.06); color:inherit}
+
+    /* Animated progress / meter */
+    .meter{width:100%; height:10px; border-radius:999px; background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); overflow:hidden}
+    .meter > i{display:block; height:100%; width:0%; background:linear-gradient(90deg, rgba(16,185,129,0.9), rgba(96,165,250,0.9)); transition:width 900ms cubic-bezier(.2,.9,.2,1)}
+
+    /* Confetti */
+    .confetti{position:fixed; left:0; top:0; width:100%; height:0; pointer-events:none; overflow:visible}
+    .piece{position:absolute; width:10px; height:14px; opacity:0; transform-origin:center; border-radius:2px}
+    @keyframes pop {
+      0%{opacity:0; transform:translateY(0) rotate(0) scale(0.6)}
+      10%{opacity:1}
+      100%{opacity:1; transform:translateY(var(--fall,200px)) rotate(var(--rot,360deg)) scale(1)}
+    }
+
+    /* floating sparkle */
+    .sparkle{position:absolute; right:8px; top:8px; width:16px; height:16px; border-radius:4px; background:linear-gradient(180deg,#fff,#ffe8d6); filter:blur(.4px); opacity:.06}
+
+    /* small helper */
+    .muted{color:var(--muted); font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Bonus Calculator</h1>
+      <p class="lead">Estimate annual bonus based on base salary, performance rating and tenure. Try changing values — watch the meter and the animated result.</p>
+
+      <form id="calcForm" autocomplete="off">
+        <label for="base">Base Salary (annual, USD)</label>
+        <input id="base" type="number" min="0" value="60000" step="100" required>
+
+        <div class="row">
+          <div>
+            <label for="rating">Performance Rating</label>
+            <select id="rating">
+              <option value="0.6">Below Expectations</option>
+              <option value="0.8">Meets Expectations</option>
+              <option value="1">Exceeds Expectations</option>
+              <option value="1.25">Outstanding</option>
+              <option value="1.5" selected>Exceptional</option>
+            </select>
+          </div>
+          <div>
+            <label for="basePct">Base Bonus %</label>
+            <input id="basePct" type="number" min="0" max="50" value="10" step="0.1">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="tenure">Years at Company</label>
+            <input id="tenure" type="number" min="0" value="2" step="1">
+          </div>
+          <div>
+            <label for="mult">Tenure Bonus / year (%)</label>
+            <input id="mult" type="number" min="0" max="10" value="1" step="0.1">
+          </div>
+        </div>
+
+        <div class="muted">Quick formula: <em>bonus = base × (basePct/100) × rating × (1 + tenure × (mult/100))</em></div>
+
+        <div class="actions">
+          <button class="btn-primary" id="calcBtn" type="button">Calculate</button>
+          <button class="btn-ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+
+        <div style="margin-top:1rem">
+          <div class="meter" aria-hidden="true"><i id="meterFill"></i></div>
+        </div>
+
+      </form>
+    </div>
+
+    <aside class="card result" aria-live="polite">
+      <div class="sparkle"></div>
+      <div class="sub">Estimated Bonus</div>
+      <div class="amount" id="amount">$0</div>
+      <div class="sub" id="details">—</div>
+      <div style="width:100%; margin-top:1rem; display:flex; gap:.5rem; justify-content:center">
+        <div class="card" style="padding:.6rem .8rem; min-width:120px; text-align:center">
+          <div class="muted">Base Bonus</div>
+          <div id="bb" style="font-weight:800">$0</div>
+        </div>
+        <div class="card" style="padding:.6rem .8rem; min-width:120px; text-align:center">
+          <div class="muted">Tenure Add</div>
+          <div id="ta" style="font-weight:800">$0</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <script>
+    // helpers
+    const $ = (id)=> document.getElementById(id);
+    const fmt = n=> '$' + Number(n).toLocaleString(undefined, {maximumFractionDigits:0});
+
+    // elements
+    const base = $('base'), rating = $('rating'), basePct = $('basePct');
+    const tenure = $('tenure'), mult = $('mult');
+    const calcBtn = $('calcBtn'), resetBtn = $('resetBtn');
+    const amountEl = $('amount'), detailsEl = $('details');
+    const bbEl = $('bb'), taEl = $('ta');
+    const meter = $('meterFill');
+    const confettiRoot = $('confetti');
+
+    // animate numeric value counting up
+    function animateNumber(el, start, end, ms=900){
+      const startTime = performance.now();
+      const delta = end - start;
+      function step(now){
+        const t = Math.min(1, (now - startTime)/ms);
+        const eased = 1 - Math.pow(1-t,3); // smooth ease-out
+        const value = Math.round(start + delta * eased);
+        el.textContent = fmt(value);
+        if(t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function calcBonus(){
+      const b = Math.max(0, Number(base.value) || 0);
+      const r = Number(rating.value) || 1;
+      const p = Math.max(0, Number(basePct.value) || 0);
+      const t = Math.max(0, Number(tenure.value) || 0);
+      const m = Math.max(0, Number(mult.value) || 0);
+
+      const baseBonus = b * (p/100) * r; // before tenure
+      const tenureAdd = baseBonus * (t * (m/100));
+      const total = Math.round(baseBonus + tenureAdd);
+
+      // meter fill based on basePct up to 50% scale
+      const fillPct = Math.min(100, (p / 50) * 100);
+      meter.style.width = fillPct + '%';
+
+      // animate numbers
+      const current = Number(amountEl.textContent.replace(/[^0-9.-]+/g,"")) || 0;
+      animateNumber(amountEl, current, total);
+      animateNumber(bbEl, 0, Math.round(baseBonus));
+      animateNumber(taEl, 0, Math.round(tenureAdd));
+
+      // details text
+      detailsEl.textContent = `Based on ${r}× performance and ${t} year(s) tenure`;
+
+      if(total > 0){ burstConfetti(); }
+    }
+
+    calcBtn.addEventListener('click', calcBonus);
+
+    resetBtn.addEventListener('click', ()=>{
+      base.value = 60000; rating.value = 1.5; basePct.value = 10; tenure.value = 2; mult.value = 1;
+      meter.style.width = '0%';
+      amountEl.textContent = '$0'; bbEl.textContent = '$0'; taEl.textContent = '$0'; detailsEl.textContent = '—';
+    });
+
+    // simple confetti: create colored pieces with random properties
+    function burstConfetti(){
+      // clear old
+      confettiRoot.innerHTML = '';
+      const colors = ['#10b981','#60a5fa','#f97316','#fb7185','#f59e0b'];
+      const count = 24;
+      for(let i=0;i<count;i++){
+        const el = document.createElement('div');
+        el.className = 'piece';
+        el.style.background = colors[i % colors.length];
+        // random position across top
+        el.style.left = (20 + Math.random()*60) + '%';
+        el.style.top = '-10px';
+        // random fall distance and rotation
+        const fall = 160 + Math.random()*240;
+        const rot = (Math.random()>.5?1:-1) * (180 + Math.random()*720);
+        el.style.setProperty('--fall', fall + 'px');
+        el.style.setProperty('--rot', rot + 'deg');
+        el.style.width = (6 + Math.random()*10) + 'px';
+        el.style.height = (10 + Math.random()*12) + 'px';
+        // staggered animation delay
+        const delay = Math.random()*0.25;
+        el.style.animation = `pop 1.2s ${delay}s both cubic-bezier(.15,.85,.25,1)`;
+        confettiRoot.appendChild(el);
+      }
+      // auto remove after animation
+      setTimeout(()=> confettiRoot.innerHTML = '', 2000);
+    }
+
+    // small enhancement: calculate on Enter in form
+    document.getElementById('calcForm').addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        e.preventDefault(); calcBonus();
+      }
+    });
+
+    // initialize with default calc
+    window.addEventListener('load', ()=>{ calcBonus(); });
+  </script>
+</body>
+</html>
