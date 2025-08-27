@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bonus Calculator</title>
+  <style>
+    :root{
+      --bg:#0e0f1a;
+      --card:#171a2b;
+      --accent:#ff6b6b;
+      --accent2:#feca57;
+      --accent3:#1dd1a1;
+      --accent4:#54a0ff;
+      --muted:#cbd5e1;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:Segoe UI, Inter, system-ui;
+      background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+      color:#fff;
+    }
+
+    .wrap{
+      width:min(960px,96vw);
+      padding:2rem;
+      display:grid;
+      grid-template-columns:1fr 380px;
+      gap:1.5rem;
+    }
+    @media(max-width:880px){ .wrap{grid-template-columns:1fr} }
+
+    .card{
+      background:linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border-radius:16px;
+      padding:1.5rem;
+      backdrop-filter: blur(14px);
+      box-shadow:0 8px 24px rgba(0,0,0,0.5);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    h1{margin:0 0 .5rem; font-size:1.5rem; background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3),var(--accent4)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+    p.lead{margin:0;color:var(--muted)}
+
+    form{display:grid; gap:1rem; margin-top:1rem}
+    label{font-weight:600; font-size:.9rem}
+    input[type=number], select{
+      width:100%; padding:.6rem .75rem;
+      border-radius:10px; border:none;
+      background:rgba(255,255,255,0.1);
+      color:#fff;
+    }
+    .row{display:flex; gap:1rem}
+    .row>*{flex:1}
+
+    .result{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem; text-align:center}
+    .amount{font-size:2.5rem; font-weight:800; background:linear-gradient(90deg,var(--accent2),var(--accent4)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+    .sub{color:var(--muted); font-size:1rem}
+
+    .actions{display:flex; gap:.8rem; margin-top:.5rem}
+    button{
+      cursor:pointer;
+      padding:.7rem 1.2rem;
+      border-radius:12px;
+      border:none;
+      font-weight:700;
+      transition:all .3s ease;
+    }
+    .btn-primary{background:linear-gradient(135deg,var(--accent3),var(--accent2)); color:#111}
+    .btn-primary:hover{transform:scale(1.05)}
+    .btn-ghost{background:transparent; border:1px solid rgba(255,255,255,0.2); color:#fff}
+
+    .meter{width:100%; height:12px; border-radius:999px; background:rgba(255,255,255,0.15); overflow:hidden; margin-top:1rem}
+    .meter>i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3),var(--accent4)); transition:width 900ms cubic-bezier(.2,.9,.2,1)}
+
+    .confetti{position:fixed; left:0; top:0; width:100%; height:0; pointer-events:none; overflow:visible}
+    .piece{position:absolute; opacity:0; border-radius:3px}
+    @keyframes pop {
+      0%{opacity:0; transform:translateY(0) rotate(0) scale(0.6)}
+      10%{opacity:1}
+      100%{opacity:1; transform:translateY(var(--fall,200px)) rotate(var(--rot,360deg)) scale(1)}
+    }
+
+    .muted{color:var(--muted); font-size:.9rem}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>🎉 Bonus Calculator for Ahmed banks</h1>
+      <p class="lead">Calculate your annual bonus interactively. Adjust the inputs and watch the animations!</p>
+
+      <form id="calcForm">
+        <label for="base">Base Salary (USD)</label>
+        <input id="base" type="number" value="60000" step="100" required>
+
+        <div class="row">
+          <div>
+            <label for="rating">Performance</label>
+            <select id="rating">
+              <option value="0.6">Below</option>
+              <option value="0.8">Meets</option>
+              <option value="1">Exceeds</option>
+              <option value="1.25">Outstanding</option>
+              <option value="1.5" selected>Exceptional</option>
+            </select>
+          </div>
+          <div>
+            <label for="basePct">Base Bonus %</label>
+            <input id="basePct" type="number" value="10">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="tenure">Years</label>
+            <input id="tenure" type="number" value="2">
+          </div>
+          <div>
+            <label for="mult">Tenure % / year</label>
+            <input id="mult" type="number" value="1">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" id="calcBtn" type="button">✨ Calculate</button>
+          <button class="btn-ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+
+        <div class="meter"><i id="meterFill"></i></div>
+      </form>
+    </div>
+
+    <aside class="card result">
+      <div class="sub">Your Bonus</div>
+      <div class="amount" id="amount">$0</div>
+      <div class="sub" id="details">—</div>
+      <div style="width:100%; margin-top:1rem; display:flex; gap:.5rem; justify-content:center">
+        <div class="card" style="padding:.6rem .8rem; min-width:120px; text-align:center">
+          <div class="muted">Base Bonus</div>
+          <div id="bb" style="font-weight:800">$0</div>
+        </div>
+        <div class="card" style="padding:.6rem .8rem; min-width:120px; text-align:center">
+          <div class="muted">Tenure Add</div>
+          <div id="ta" style="font-weight:800">$0</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <script>
+    const $ = id=>document.getElementById(id);
+    const fmt = n=>'$'+Number(n).toLocaleString();
+    const base=$('base'),rating=$('rating'),basePct=$('basePct');
+    const tenure=$('tenure'),mult=$('mult');
+    const amount=$('amount'),details=$('details');
+    const bb=$('bb'),ta=$('ta'),meter=$('meterFill'),confetti=$('confetti');
+
+    function animateNumber(el,start,end,dur=800){
+      const s=performance.now();const diff=end-start;
+      function step(t){
+        let k=Math.min(1,(t-s)/dur);
+        let val=Math.round(start+diff*(1-Math.pow(1-k,3)));
+        el.textContent=fmt(val);
+        if(k<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function calc(){
+      const b=+base.value||0,r=+rating.value||1,p=+basePct.value||0,t=+tenure.value||0,m=+mult.value||0;
+      const baseBonus=b*(p/100)*r;
+      const tenureAdd=baseBonus*(t*(m/100));
+      const total=baseBonus+tenureAdd;
+      animateNumber(amount,+amount.textContent.replace(/[^0-9]/g,''),total);
+      animateNumber(bb,0,baseBonus);
+      animateNumber(ta,0,tenureAdd);
+      details.textContent=`Perf x${r}, tenure ${t} yrs`;
+      meter.style.width=Math.min(100,(p/50)*100)+'%';
+      if(total>0)makeConfetti();
+    }
+
+    function makeConfetti(){
+      confetti.innerHTML='';
+      const colors=['#ff6b6b','#feca57','#1dd1a1','#54a0ff','#f368e0'];
+      for(let i=0;i<25;i++){
+        let d=document.createElement('div');
+        d.className='piece';
+        d.style.background=colors[i%colors.length];
+        d.style.left=(10+Math.random()*80)+'%';
+        d.style.top='-10px';
+        d.style.width=(6+Math.random()*8)+'px';
+        d.style.height=(10+Math.random()*14)+'px';
+        d.style.setProperty('--fall',(200+Math.random()*200)+'px');
+        d.style.setProperty('--rot',(Math.random()>.5?1:-1)*(180+Math.random()*720)+'deg');
+        d.style.animation=`pop 1.3s ${Math.random()*0.3}s both ease-out`;
+        confetti.appendChild(d);
+      }
+      setTimeout(()=>confetti.innerHTML='',2000);
+    }
+
+    $('calcBtn').onclick=calc;
+    $('resetBtn').onclick=()=>{base.value=60000;r.rating=1.5;basePct.value=10;tenure.value=2;mult.value=1;amount.textContent='$0';bb.textContent='$0';ta.textContent='$0';details.textContent='—';meter.style.width='0%'};
+    window.onload=calc;
+  </script>
+</body>
+</html>
