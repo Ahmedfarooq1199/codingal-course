@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sunny Spoon — Restaurant Template</title>
+  <meta name="description" content="Beginner-friendly, single-file restaurant website template with simple animations." />
+  <style>
+    /* ====== Basic reset and layout ====== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background: #fff6f0; color: #333; }
+    a { color: inherit; text-decoration: none; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+    /* ====== Header ====== */
+    header { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .brand { display: flex; gap: 12px; align-items: center; }
+    .logo { width: 54px; height: 54px; border-radius: 12px; background: linear-gradient(135deg,#ff8a65,#ffcc80); display: grid; place-items: center; font-weight: 700; color: #5a2b1f; box-shadow: 0 6px 18px rgba(88,36,24,0.12); }
+    nav a { margin-left: 18px; font-weight: 600; }
+
+    /* ====== Hero ====== */
+    .hero { display: grid; grid-template-columns: 1fr 420px; gap: 28px; align-items: center; margin: 18px 0 28px; }
+    .hero-card { background: linear-gradient(180deg,#fff,#fffefc); padding: 28px; border-radius: 18px; box-shadow: 0 8px 26px rgba(88,36,24,0.06); }
+    .hero h1 { font-size: 34px; margin-bottom: 8px; }
+    .hero p { color: #5b3b31; opacity: .9; margin-bottom: 14px; }
+    .cta { display: inline-block; padding: 10px 16px; border-radius: 12px; background: #ff8a65; color: white; font-weight: 700; box-shadow: 0 6px 18px rgba(255,138,101,0.25); transform: translateY(0); transition: transform .18s ease; }
+    .cta:hover { transform: translateY(-4px); }
+
+    /* Animated plate (decorative) */
+    .plate { width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #fff9f6 0 30%, #fff0e8 60%, #ffe5d6 100%); display: grid; place-items: center; box-shadow: 0 18px 40px rgba(88,36,24,0.08); }
+    .plate::after { content: ''; width: 160px; height: 160px; border-radius: 50%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill="%23ff8a65"><circle cx="30" cy="45" r="6"/><circle cx="70" cy="45" r="6"/><rect x="44" y="22" width="12" height="30" rx="6"/></g></svg>') center/60% no-repeat; opacity: .95; transform-origin: 50% 50%; animation: plate-spin 6s linear infinite; }
+    @keyframes plate-spin { 0% { transform: rotate(0deg); } 50%{ transform: rotate(18deg) scale(1.02); } 100%{ transform: rotate(0deg); } }
+
+    /* ====== Menu cards ====== */
+    .menu { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap: 18px; }
+    .card { background: linear-gradient(180deg,#fff,#fffaf7); padding: 16px; border-radius: 14px; box-shadow: 0 8px 20px rgba(86,38,28,0.04); transition: transform .18s ease, box-shadow .18s ease; }
+    .card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 18px 34px rgba(86,38,28,0.10); }
+    .card .dish { font-weight: 700; margin-bottom: 6px; }
+    .price { font-weight: 800; color: #b24b2e; }
+
+    /* ====== Reservation Form ====== */
+    form { display: grid; gap: 10px; }
+    label { font-size: 13px; font-weight: 600; color: #5b3b31; }
+    input, select, button, textarea { padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(88,36,24,0.08); font-size: 14px; }
+    .row { display: flex; gap: 8px; }
+    .row > * { flex: 1; }
+
+    /* ====== Footer ====== */
+    footer { margin-top: 26px; padding: 18px 0; text-align: center; color: #6a4b42; opacity: .9; }
+
+    /* ====== Responsive ====== */
+    @media (max-width: 880px) {
+      .hero { grid-template-columns: 1fr; }
+      .plate { justify-self: center; }
+    }
+
+    /* ====== Tiny helper animation for nav mobile button ====== */
+    .nav-toggle { display: none; }
+    @media (max-width: 700px){
+      nav a { display: none; }
+      .nav-toggle { display: inline-block; border: 1px dashed rgba(88,36,24,0.12); padding: 6px 8px; border-radius: 8px; }
+      .mobile-nav { display: none; margin-top: 8px; gap: 8px; }
+      .mobile-nav.show { display: flex; flex-direction: column; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden>SS</div>
+        <div>
+          <div style="font-weight:800;">Sunny Spoon</div>
+          <div style="font-size:12px; color:#7a5a50;">Cozy food & friendly service</div>
+        </div>
+      </div>
+      <div>
+        <nav>
+          <a href="#menu">Menu</a>
+          <a href="#reserve">Reserve</a>
+          <a href="#contact">Contact</a>
+          <button class="nav-toggle" id="navToggle">Menu</button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-card">
+          <h1>Fresh, local flavours — every day</h1>
+          <p>Welcome to Sunny Spoon: seasonal dishes, warm atmosphere and excellent coffee. Choose from our chef-selected plates below or reserve a table.</p>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <a class="cta" href="#menu">See Menu</a>
+            <a style="font-weight:700; padding:8px 12px; border-radius:8px; border:1px solid rgba(88,36,24,0.06);">Order Pickup</a>
+          </div>
+
+          <div style="margin-top:16px;">
+            <h3 style="margin-bottom:8px;">Specials today</h3>
+            <div class="menu">
+              <article class="card">
+                <div class="dish">Grilled Lemon Chicken</div>
+                <div style="font-size:13px; margin-bottom:8px;">Herbed quinoa, seasonal greens</div>
+                <div class="price">$12.99</div>
+              </article>
+
+              <article class="card">
+                <div class="dish">Roasted Veggie Bowl</div>
+                <div style="font-size:13px; margin-bottom:8px;">With tahini drizzle</div>
+                <div class="price">$10.50</div>
+              </article>
+
+              <article class="card">
+                <div class="dish">Sea Salt Caramel Tart</div>
+                <div style="font-size:13px; margin-bottom:8px;">House baked</div>
+                <div class="price">$6.00</div>
+              </article>
+
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:18px; align-items:center;">
+          <div class="plate" aria-hidden title="Decorative animated plate"></div>
+
+          <!-- Reservation quick form -->
+          <div class="hero-card" id="reserve">
+            <h3 style="margin-bottom:8px;">Quick reservation</h3>
+            <form id="reserveForm">
+              <label for="name">Name</label>
+              <input id="name" placeholder="Your name" required />
+
+              <div class="row">
+                <div>
+                  <label for="date">Date</label>
+                  <input id="date" type="date" />
+                </div>
+                <div>
+                  <label for="time">Time</label>
+                  <input id="time" type="time" />
+                </div>
+              </div>
+
+              <label for="guests">Guests</label>
+              <select id="guests">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5+</option>
+              </select>
+
+              <button type="submit" style="background:#ff8a65;color:white;border:none;">Reserve</button>
+            </form>
+            <div id="reserveMsg" style="margin-top:10px;font-size:13px;color:#5a3b32;display:none;"></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 id="menu" style="margin-bottom:10px;">Full Menu</h2>
+        <p style="color:#6b4f46;margin-bottom:12px;">Browse categories and click a dish for details.</p>
+        <div class="menu">
+          <!-- Example cards - beginner can duplicate these -->
+          <article class="card" tabindex="0" onclick="showDish(this)">
+            <div class="dish">Margherita Pizza</div>
+            <div style="font-size:13px;">Tomato, basil, buffalo mozzarella</div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;align-items:center;"><div class="price">$11.00</div><div style="font-size:12px;color:#7a5a50;">Tap for details</div></div>
+          </article>
+
+          <article class="card" tabindex="0" onclick="showDish(this)">
+            <div class="dish">Spicy Shrimp Pasta</div>
+            <div style="font-size:13px;">Garlic, chili, parsley</div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;align-items:center;"><div class="price">$14.50</div><div style="font-size:12px;color:#7a5a50;">Tap for details</div></div>
+          </article>
+
+          <article class="card" tabindex="0" onclick="showDish(this)">
+            <div class="dish">Vegan Buddha Bowl</div>
+            <div style="font-size:13px;">Roasted veg, hummus, seeds</div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;align-items:center;"><div class="price">$9.75</div><div style="font-size:12px;color:#7a5a50;">Tap for details</div></div>
+          </article>
+
+        </div>
+      </section>
+
+      <section style="margin-top:20px;">
+        <h2 id="contact">Contact & Hours</h2>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;">
+          <div style="flex:1;min-width:220px;padding:16px;border-radius:12px;background:#fffaf6;box-shadow:0 8px 20px rgba(86,38,28,0.03);">
+            <strong>Address</strong>
+            <p style="margin-top:8px;">123 Market Lane, Your City</p>
+            <p style="margin-top:6px;">Open: Mon–Sun · 9:00 AM — 10:00 PM</p>
+          </div>
+
+          <div style="flex:1;min-width:220px;padding:16px;border-radius:12px;background:#fffaf6;box-shadow:0 8px 20px rgba(86,38,28,0.03);">
+            <strong>Phone</strong>
+            <p style="margin-top:8px;">+1 (555) 123-4567</p>
+            <p style="margin-top:6px;">Email: hello@sunnyspoon.example</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <small>© <span id="year"></span> Sunny Spoon — Made with care.</small>
+    </footer>
+  </div>
+
+  <!-- ====== Small JS for interactivity (beginner-friendly) ====== -->
+  <script>
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Simple reservation form handler (no backend) — shows a friendly message
+    document.getElementById('reserveForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = document.getElementById('name').value || 'Guest';
+      var guests = document.getElementById('guests').value || '1';
+      var msg = document.getElementById('reserveMsg');
+      msg.style.display = 'block';
+      msg.textContent = 'Thanks, ' + name + '! We saved a spot for ' + guests + ' — we will contact you to confirm.';
+      // small animation
+      msg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, fill: 'forwards' });
+      // reset after 3s
+      setTimeout(function(){ msg.style.display = 'none'; document.getElementById('reserveForm').reset(); }, 3000);
+    });
+
+    // Dish detail quick alert (beginner-friendly) — you can replace with a modal later
+    function showDish(card){
+      var title = card.querySelector('.dish').textContent;
+      var price = card.querySelector('.price').textContent;
+      alert(title + '\nPrice: ' + price + '\n\nIngredients: see kitchen for allergies.');
+    }
+
+    // mobile nav toggle
+    document.getElementById('navToggle').addEventListener('click', function(){
+      var mobile = document.querySelector('.mobile-nav');
+      if(!mobile){
+        mobile = document.createElement('div'); mobile.className = 'mobile-nav show';
+        mobile.innerHTML = '<a href="#menu">Menu</a><a href="#reserve">Reserve</a><a href="#contact">Contact</a>';
+        this.parentElement.appendChild(mobile);
+      } else { mobile.classList.toggle('show'); }
+    });
+
+    // Accessibility: allow Enter/Space to activate card on keyboard
+    document.querySelectorAll('.card[tabindex]').forEach(function(c){
+      c.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' ') showDish(c); });
+    });
+  </script>
+</body>
+</html>
