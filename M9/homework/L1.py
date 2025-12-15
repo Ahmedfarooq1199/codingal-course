@@ -1,49 +1,41 @@
-def write_file(filename, content):
-try:
-with open(filename, "w", encoding="utf-8") as f:
-f.write(content)
-print(f"Successfully wrote to {filename}")
-except Exception as e:
-print(f"Error writing file: {e}")
+import tkinter as tk
+import random
 
 
-# Function to read data from a file
+window = tk.Tk()
+window.title("Rock Paper Scissors")
+window.geometry("300x350")
 
 
-def read_file(filename):
-try:
-with open(filename, "r", encoding="utf-8") as f:
-data = f.read()
-print(f"Contents of {filename}:")
-print(data)
-except FileNotFoundError:
-print(f"File '{filename}' not found.")
-except Exception as e:
-print(f"Error reading file: {e}")
+choices = ["Rock", "Paper", "Scissors"]
 
 
-# Function to append data to a file
+result_label = tk.Label(window, text="Choose one", font=("Arial", 14))
+result_label.pack(pady=20)
 
 
-def append_file(filename, content):
-try:
-with open(filename, "a", encoding="utf-8") as f:
-f.write(content)
-print(f"Successfully appended to {filename}")
-except Exception as e:
-print(f"Error appending to file: {e}")
+def play(player_choice):
+    computer_choice = random.choice(choices)
+
+    if player_choice == computer_choice:
+        result = "Draw 🤝"
+    elif (
+        (player_choice == "Rock" and computer_choice == "Scissors") or
+        (player_choice == "Paper" and computer_choice == "Rock") or
+        (player_choice == "Scissors" and computer_choice == "Paper")
+    ):
+        result = "You Win 🎉"
+    else:
+        result = "Computer Wins 😢"
+
+    result_label.config(
+        text=f"You: {player_choice}\nComputer: {computer_choice}\n\n{result}"
+    )
 
 
-
-if __name__ == "__main__":
-file_name = "demo.txt"
-
-
-write_file(file_name, "Hello! This is the first line.\n")
+tk.Button(window, text="Rock", width=15, command=lambda: play("Rock")).pack(pady=5)
+tk.Button(window, text="Paper", width=15, command=lambda: play("Paper")).pack(pady=5)
+tk.Button(window, text="Scissors", width=15, command=lambda: play("Scissors")).pack(pady=5)
 
 
-append_file(file_name, "This is an appended line.\n")
-
-
-
-read_file(file_name)
+window.mainloop()
