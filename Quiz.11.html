@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>General Knowledge Quiz — Report Card</title>
+  <style>
+    :root{--bg:#0f172a;--card:#0b1220;--accent:#06b6d4;--muted:#94a3b8;--success:#10b981;--danger:#ef4444}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial}
+    body{background:linear-gradient(180deg,#071028 0%, #071428 60%);color:#e6eef6;display:flex;align-items:flex-start;justify-content:center;padding:28px}
+    .wrap{max-width:980px;width:100%}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .card{background:rgba(255,255,255,0.03);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+
+    .quiz-meta{display:flex;gap:12px;align-items:center}
+    .btn{background:var(--accent);color:#042021;padding:8px 12px;border-radius:8px;border:0;font-weight:600;cursor:pointer}
+    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)}
+
+    .question{margin:14px 0;padding:14px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));}
+    .q-head{display:flex;justify-content:space-between;align-items:center}
+    .choices{display:flex;flex-direction:column;margin-top:10px;gap:8px}
+    label.choice{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    input[type="radio"]{accent-color:var(--accent)}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* Report card */
+    .report{display:none;margin-top:16px}
+    .report .grade{font-size:36px;font-weight:700}
+    .summary{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px}
+    .summary .stat{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;min-width:140px}
+    .review{margin-top:14px}
+    .review .row{display:grid;grid-template-columns:1fr 120px;gap:12px;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);align-items:center}
+    .correct{color:var(--success);font-weight:600}
+    .wrong{color:var(--danger);font-weight:600}
+
+    footer{margin-top:14px;display:flex;gap:8px;align-items:center}
+
+    @media (max-width:640px){.q-head{flex-direction:column;align-items:flex-start}.summary{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>General Knowledge Quiz</h1>
+      <div class="quiz-meta small">
+        <div id="questionCounter">Question 1 / 10</div>
+        <button class="btn" id="restartBtn">Restart</button>
+      </div>
+    </header>
+
+    <main class="card">
+      <section id="quizArea">
+        <!-- Questions will be injected here -->
+      </section>
+
+      <footer>
+        <button class="btn secondary" id="prevBtn">Previous</button>
+        <button class="btn" id="nextBtn">Next</button>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+          <div class="small">Time: <span id="timer">--:--</span></div>
+          <button class="btn secondary" id="submitBtn">Submit & Show Report</button>
+        </div>
+      </footer>
+
+      <section class="report card" id="reportCard">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="small">Report Card</div>
+            <div class="grade" id="gradeText">0 / 10</div>
+            <div class="small" id="percentText">0%</div>
+          </div>
+          <div style="text-align:right">
+            <div class="small">Performance</div>
+            <div id="performance" style="font-weight:700">Needs improvement</div>
+          </div>
+        </div>
+
+        <div class="summary" id="summaryStats">
+          <div class="stat"><div class="small">Correct</div><div id="correctCount">0</div></div>
+          <div class="stat"><div class="small">Incorrect</div><div id="incorrectCount">0</div></div>
+          <div class="stat"><div class="small">Unanswered</div><div id="unansweredCount">0</div></div>
+          <div class="stat"><div class="small">Score</div><div id="scorePoints">0</div></div>
+        </div>
+
+        <div class="review" id="reviewArea">
+          <h3 style="margin:8px 0">Review Answers</h3>
+          <!-- review rows -->
+        </div>
+
+        <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+          <button class="btn" id="printBtn">Print / Save as PDF</button>
+          <button class="btn secondary" id="retakeBtn">Retake Quiz</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Quiz data: 10 sample general knowledge questions
+    const quiz = [
+      {q: "What is the capital city of Pakistan?", choices: ["Islamabad","Madrid","Paris","Lisbon"], a:1, explanation: "Islamabad is the capital of Pakistan."},
+      {q: "Which planet is known as the Red Planet?", choices: ["Venus","Mars","Jupiter","Saturn"], a:1, explanation: "Mars is commonly called the Red Planet."},
+      {q: "Who wrote the play 'Romeo and Juliet'?", choices: ["William Shakespeare","Charles Dickens","Leo Tolstoy","Mark Twain"], a:0, explanation: "William Shakespeare wrote Romeo and Juliet."},
+      {q: "Which element has the chemical symbol 'O'?", choices: ["Gold","Oxygen","Silver","Iron"], a:1, explanation: "O is the chemical symbol for Oxygen."},
+      {q: "What is the largest ocean on Earth?", choices: ["Indian Ocean","Atlantic Ocean","Arctic Ocean","Pacific Ocean"], a:3, explanation: "The Pacific Ocean is the largest."},
+      {q: "In which country would you find the Great Pyramid of Giza?", choices: ["Mexico","Egypt","India","China"], a:1, explanation: "The Great Pyramid is in Egypt."},
+      {q: "Which scientist proposed the theory of relativity?", choices: ["Isaac Newton","Albert Einstein","Niels Bohr","Galileo Galilei"], a:1, explanation: "Albert Einstein is known for the theory of relativity."},
+      {q: "Which language has the most native speakers globally?", choices: ["English","Spanish","Mandarin Chinese","Hindi"], a:2, explanation: "Mandarin Chinese has the largest number of native speakers."},
+      {q: "Which continent is the Sahara Desert located in?", choices: ["Asia","South America","Africa","Australia"], a:2, explanation: "The Sahara is in Africa."},
+      {q: "What is the process by which plants make food using sunlight?", choices: ["Transpiration","Respiration","Photosynthesis","Fermentation"], a:2, explanation: "Photosynthesis is how plants make food using sunlight."}
+    ];
+
+    let answers = Array(quiz.length).fill(null);
+    let current = 0;
+    let timerSeconds = 10 * 60; // 10 minutes default; you may change
+    let timerInterval = null;
+
+    const quizArea = document.getElementById('quizArea');
+    const questionCounter = document.getElementById('questionCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const reportCard = document.getElementById('reportCard');
+    const gradeText = document.getElementById('gradeText');
+    const percentText = document.getElementById('percentText');
+    const performance = document.getElementById('performance');
+    const correctCount = document.getElementById('correctCount');
+    const incorrectCount = document.getElementById('incorrectCount');
+    const unansweredCount = document.getElementById('unansweredCount');
+    const scorePoints = document.getElementById('scorePoints');
+    const reviewArea = document.getElementById('reviewArea');
+    const timerEl = document.getElementById('timer');
+    const printBtn = document.getElementById('printBtn');
+    const retakeBtn = document.getElementById('retakeBtn');
+
+    function startTimer(){
+      updateTimerDisplay();
+      timerInterval = setInterval(()=>{
+        if(timerSeconds<=0){
+          clearInterval(timerInterval);
+          autoSubmit();
+          return;
+        }
+        timerSeconds--;
+        updateTimerDisplay();
+      },1000);
+    }
+    function updateTimerDisplay(){
+      const m = Math.floor(timerSeconds/60).toString().padStart(2,'0');
+      const s = (timerSeconds%60).toString().padStart(2,'0');
+      timerEl.textContent = `${m}:${s}`;
+    }
+
+    function renderQuestion(index){
+      const item = quiz[index];
+      quizArea.innerHTML = '';
+      const qWrap = document.createElement('div');
+      qWrap.className = 'question';
+
+      const head = document.createElement('div');
+      head.className = 'q-head';
+      head.innerHTML = `<div><strong>Q${index+1}.</strong> ${item.q}</div><div class="small">Points: 1</div>`;
+      qWrap.appendChild(head);
+
+      const choices = document.createElement('div');
+      choices.className = 'choices';
+      item.choices.forEach((c,i)=>{
+        const id = `q${index}_c${i}`;
+        const label = document.createElement('label');
+        label.className = 'choice';
+        label.htmlFor = id;
+        label.innerHTML = `<input type="radio" name="q${index}" id="${id}" value="${i}" ${answers[index]===i? 'checked':''}/> <span>${c}</span>`;
+        choices.appendChild(label);
+      });
+
+      qWrap.appendChild(choices);
+      quizArea.appendChild(qWrap);
+
+      // wire choice change
+      document.querySelectorAll(`input[name="q${index}"]`).forEach(inp=>{
+        inp.addEventListener('change', e=>{
+          answers[index] = parseInt(e.target.value,10);
+          saveProgress();
+        });
+      });
+
+      questionCounter.textContent = `Question ${index+1} / ${quiz.length}`;
+      prevBtn.disabled = index===0;
+      nextBtn.disabled = index===quiz.length-1;
+    }
+
+    function next(){ if(current<quiz.length-1){ current++; renderQuestion(current);} }
+    function prev(){ if(current>0){ current--; renderQuestion(current);} }
+
+    function calculate(){
+      let correct=0, incorrect=0, unanswered=0;
+      for(let i=0;i<quiz.length;i++){
+        const ans = answers[i];
+        if(ans===null) unanswered++;
+        else if(ans===quiz[i].a) correct++;
+        else incorrect++;
+      }
+      const score = correct; // 1 point each
+      return {correct,incorrect,unanswered,score};
+    }
+
+    function showReport(){
+      const {correct,incorrect,unanswered,score} = calculate();
+      gradeText.textContent = `${score} / ${quiz.length}`;
+      const pct = Math.round((score/quiz.length)*100);
+      percentText.textContent = `${pct}%`;
+      correctCount.textContent = correct;
+      incorrectCount.textContent = incorrect;
+      unansweredCount.textContent = unanswered;
+      scorePoints.textContent = `${score} points`;
+
+      let perf = 'Needs improvement';
+      if(pct>=85) perf='Excellent';
+      else if(pct>=65) perf='Good';
+      else if(pct>=40) perf='Average';
+      performance.textContent = perf;
+
+      // review rows
+      reviewArea.querySelectorAll('.row')?.forEach(n=>n.remove());
+      quiz.forEach((q,i)=>{
+        const row = document.createElement('div');
+        row.className = 'row';
+        const left = document.createElement('div');
+        left.innerHTML = `<strong>Q${i+1}.</strong> ${q.q}<div class="small" style="margin-top:6px">Explanation: ${q.explanation}</div>`;
+        const right = document.createElement('div');
+        const user = answers[i]===null ? '— Unanswered' : q.choices[answers[i]];
+        const correctChoice = q.choices[q.a];
+        const flag = answers[i]===q.a ? `<div class="correct">Correct</div>` : `<div class="wrong">Wrong</div>`;
+        right.innerHTML = `<div class="small">Your answer:<div style="font-weight:600">${user}</div></div><div class="small">Correct:<div style="font-weight:600">${correctChoice}</div></div>${flag}`;
+        row.appendChild(left);row.appendChild(right);
+        reviewArea.appendChild(row);
+      });
+
+      reportCard.style.display = 'block';
+      // stop timer
+      clearInterval(timerInterval);
+      // scroll to report
+      reportCard.scrollIntoView({behavior:'smooth'});
+      saveResult({date:new Date().toISOString(),score,correct,incorrect,unanswered});
+    }
+
+    function autoSubmit(){
+      alert('Time is up — submitting your answers.');
+      showReport();
+    }
+
+    function saveProgress(){
+      const state = {answers,current,timerSeconds};
+      try{localStorage.setItem('gk_quiz_progress',JSON.stringify(state));}catch(e){}
+    }
+    function loadProgress(){
+      try{
+        const raw = localStorage.getItem('gk_quiz_progress');
+        if(raw){const s = JSON.parse(raw); if(Array.isArray(s.answers) && s.answers.length===quiz.length){answers=s.answers; current=s.current||0; timerSeconds = s.timerSeconds || timerSeconds;}}
+      }catch(e){}
+    }
+
+    function saveResult(result){
+      try{
+        const arr = JSON.parse(localStorage.getItem('gk_quiz_results')||'[]');
+        arr.unshift(result);
+        localStorage.setItem('gk_quiz_results',JSON.stringify(arr.slice(0,20)));
+      }catch(e){}
+    }
+
+    // Buttons
+    prevBtn.addEventListener('click',()=>{prev();});
+    nextBtn.addEventListener('click',()=>{next();});
+    restartBtn.addEventListener('click',()=>{ if(confirm('Restart quiz and clear progress?')){answers = Array(quiz.length).fill(null); current=0; timerSeconds=10*60; localStorage.removeItem('gk_quiz_progress'); renderQuestion(current); reportCard.style.display='none'; startTimer();}});
+    submitBtn.addEventListener('click',()=>{ if(confirm('Submit quiz now?')) showReport(); });
+    retakeBtn.addEventListener('click',()=>{ if(confirm('Retake quiz?')){answers = Array(quiz.length).fill(null); current=0; timerSeconds=10*60; localStorage.removeItem('gk_quiz_progress'); renderQuestion(current); reportCard.style.display='none'; startTimer();}});
+    printBtn.addEventListener('click',()=>{ window.print(); });
+
+    // keyboard navigation
+    document.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight') next();
+      if(e.key==='ArrowLeft') prev();
+    });
+
+    // initial load
+    loadProgress();
+    renderQuestion(current);
+    startTimer();
+
+    // expose for debugging (optional)
+    window._quiz = {quiz,answers};
+  </script>
+</body>
+</html>

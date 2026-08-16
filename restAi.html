@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Lahori Darbar | Authentic Pakistani Restaurant with AI Assistant</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Playfair+Display:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fffaf5;
+            color: #2c1e12;
+            scroll-behavior: smooth;
+            line-height: 1.5;
+        }
+
+        h1,
+        h2,
+        h3,
+        .logo {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+            background: #fffaf5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(255, 250, 245, 0.96);
+            backdrop-filter: blur(2px);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #b85c1a;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #2c5a2e;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #3e2a21;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #b85c1a;
+        }
+
+        .btn-reserve {
+            background: #b85c1a;
+            color: white !important;
+            padding: 0.5rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        .btn-reserve:hover {
+            background: #9a4510;
+            transform: scale(0.97);
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(105deg, #fff2e6 0%, #ffe6d5 100%);
+            border-radius: 0 0 3rem 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-grid {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            padding: 3rem 2rem;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text .badge {
+            background: #2c5a2e20;
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2c5a2e;
+            margin-bottom: 1rem;
+        }
+
+        .hero-text h1 {
+            font-size: 3.3rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #4b2e1a;
+            margin-bottom: 1rem;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: #5a3e2a;
+            margin: 1rem 0 2rem;
+            max-width: 90%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #b85c1a;
+            color: white;
+            box-shadow: 0 4px 8px rgba(184, 92, 26, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: #9a4510;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid #b85c1a;
+            color: #b85c1a;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: #b85c1a10;
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 2rem;
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            object-fit: cover;
+            height: auto;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3e2a21;
+            margin-bottom: 1rem;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: #7d5d42;
+            max-width: 680px;
+            margin: 0 auto 3rem auto;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 2rem;
+            overflow: hidden;
+            width: 300px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            color: #b85c1a;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0.75rem 0;
+        }
+
+        .desc {
+            color: #6b4e34;
+            font-size: 0.9rem;
+        }
+
+        /* Ambiance */
+        .ambiance {
+            background: #faf0e8;
+            border-radius: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            padding: 3rem;
+            margin: 2rem 0;
+        }
+
+        .ambiance-img {
+            flex: 1;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+
+        .ambiance-img img {
+            width: 100%;
+            display: block;
+            height: auto;
+        }
+
+        .ambiance-text {
+            flex: 1;
+        }
+
+        .ambiance-text h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Menu Preview Table */
+        .menu-table {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-cat {
+            font-size: 1.8rem;
+            margin: 1.5rem 0 1rem 0;
+            border-left: 5px solid #b85c1a;
+            padding-left: 1rem;
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #e2cfbc;
+            padding: 0.7rem 0;
+        }
+
+        .item-name {
+            font-weight: 600;
+        }
+
+        .item-price {
+            color: #b85c1a;
+            font-weight: 700;
+        }
+
+        /* Contact & Reservation */
+        .contact-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            background: #2c1e12;
+            color: #fef2e6;
+            border-radius: 2rem;
+            padding: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-info,
+        .reserve-form {
+            flex: 1;
+        }
+
+        .contact-info i {
+            color: #f5b37a;
+            width: 2rem;
+        }
+
+        .contact-info p {
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reserve-form input,
+        .reserve-form select,
+        .reserve-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 1rem;
+            background: #fff6ed;
+            font-family: inherit;
+        }
+
+        .reserve-form button {
+            background: #f5b37a;
+            color: #2c1e12;
+            font-weight: bold;
+            border: none;
+            width: 100%;
+        }
+
+        /* ========= AI COMPANION STYLES ========= */
+        .ai-companion {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+
+        .ai-toggle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b85c1a, #d97a2b);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .ai-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 28px rgba(184, 92, 26, 0.4);
+        }
+
+        .ai-chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            height: 500px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform-origin: bottom right;
+            border: 1px solid #f0e0d0;
+        }
+
+        .ai-chat-window.hidden {
+            display: none;
+        }
+
+        .ai-header {
+            background: #2c1e12;
+            color: #fef2e6;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .ai-avatar {
+            background: #b85c1a;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .ai-header h4 {
+            flex: 1;
+            font-size: 1.1rem;
+        }
+
+        .ai-close {
+            background: none;
+            border: none;
+            color: #f5b37a;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .ai-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #fef9f3;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 0.7rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .bot-message {
+            background: #e8ddd0;
+            color: #2c1e12;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background: #b85c1a;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-input-area {
+            display: flex;
+            padding: 0.8rem;
+            background: white;
+            border-top: 1px solid #eedbcb;
+            gap: 8px;
+        }
+
+        .ai-input-area input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: 1px solid #e2cfbc;
+            border-radius: 40px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .ai-input-area button {
+            background: #b85c1a;
+            border: none;
+            color: white;
+            width: 40px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .typing-indicator {
+            color: #9b7a60;
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            background: #e8ddd0;
+            border-radius: 20px;
+            align-self: flex-start;
+            width: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #eedbcb;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 560px) {
+            .ai-chat-window {
+                width: 300px;
+                height: 460px;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">Lahori <span>Darbar</span></div>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Reservations</a></li>
+        </ul>
+        <a href="#contact" class="btn-reserve">Book a Table</a>
+    </nav>
+
+    <main>
+        <section id="home">
+            <div class="hero">
+                <div class="container hero-grid">
+                    <div class="hero-text">
+                        <div class="badge"><i class="fas fa-utensils"></i> Since 1995</div>
+                        <h1>Authentic Taste of <br> Lahore, Pakistan</h1>
+                        <p>Experience centuries-old recipes, bold spices, and the true warmth of Pakistani hospitality.
+                            From sizzling BBQ to rich handi, every bite tells a story.</p>
+                        <div class="btn-group">
+                            <a href="#menu" class="btn btn-primary">Explore Menu</a>
+                            <a href="#contact" class="btn btn-outline">Reserve Now</a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&h=450&fit=crop"
+                            alt="Authentic Pakistani Chicken Karahi with Naan" loading="eager">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="section">
+                <h2 class="section-title">Signature Delicacies</h2>
+                <p class="section-sub">Our chefs bring the authentic taste of Lahore's street food and royal cuisine</p>
+                <div class="cards">
+                    <div class="card">
+                        <div class="card-img"
+                            style="background-image: url('https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=400&h=260&fit=crop');">
+                        </div>
+                        <div class="card-content">
+                            <h3>Butter Chicken</h3>
+                            <div class="price">₨ 1250</div>
+                            <div class="desc">Creamy tomato gravy, tender chicken, fenugreek aroma – a classic favorite.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-img"
+                            style="background-image: url('https://images.unsplash.com/photo-1563379091339-03b21a4a5f2c?w=400&h=260&fit=crop');">
+                        </div>
+                        <div class="card-content">
+                            <h3>Lahori Biryani</h3>
+                            <div class="price">₨ 950</div>
+                            <div class="desc">Aromatic basmati rice, tender beef, caramelized onions and exotic spices.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-img"
+                            style="background-image: url('https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=400&h=260&fit=crop');">
+                        </div>
+                        <div class="card-content">
+                            <h3>Seekh Kebabs</h3>
+                            <div class="price">₨ 1100</div>
+                            <div class="desc">Minced lamb, green chilies & secret spice blend, grilled to perfection.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="about">
+                <div class="ambiance">
+                    <div class="ambiance-img">
+                        <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=600&h=420&fit=crop"
+                            alt="Pakistani restaurant traditional interior dining area">
+                    </div>
+                    <div class="ambiance-text">
+                        <h2>Warmth of Punjab in Every Corner</h2>
+                        <p>Lahori Darbar recreates the rustic charm of Anarkali Bazaar and the royal flavours of the
+                            Mughal era. Our open kitchen, hand-painted truck art, and live BBQ station bring Lahore’s
+                            food street culture to life. Perfect for families, friends, and grand feasts.</p>
+                        <p><i class="fas fa-check-circle" style="color:#b85c1a;"></i> 100% Halal & Hand-Spiced<br>
+                            <i class="fas fa-check-circle" style="color:#b85c1a;"></i> Freshly baked tandoori naan<br>
+                            <i class="fas fa-check-circle" style="color:#b85c1a;"></i> Private dining & party hall
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="menu">
+                <h2 class="section-title" style="margin-top: 2rem;">Our Menu Highlights</h2>
+                <div class="menu-table">
+                    <div class="menu-cat"><i class="fas fa-fire"></i> Tandoori & BBQ</div>
+                    <div class="menu-items">
+                        <div class="menu-item"><span class="item-name">Chicken Tikka (Boti)</span><span
+                                class="item-price">₨ 950</span></div>
+                        <div class="menu-item"><span class="item-name">Malai Boti</span><span class="item-price">₨
+                                1050</span></div>
+                        <div class="menu-item"><span class="item-name">Lamb Chops (Signature)</span><span
+                                class="item-price">₨ 1750</span></div>
+                        <div class="menu-item"><span class="item-name">Reshmi Kebab</span><span class="item-price">₨
+                                990</span></div>
+                    </div>
+                    <div class="menu-cat"><i class="fas fa-utensils"></i> Handi & Karhai Specials</div>
+                    <div class="menu-items">
+                        <div class="menu-item"><span class="item-name">Chicken Karahi (Lahori Style)</span><span
+                                class="item-price">₨ 1350</span></div>
+                        <div class="menu-item"><span class="item-name">Mutton Handi</span><span class="item-price">₨
+                                1650</span></div>
+                        <div class="menu-item"><span class="item-name">Daal Makhani (Creamy black lentils)</span><span
+                                class="item-price">₨ 750</span></div>
+                        <div class="menu-item"><span class="item-name">Palak Paneer</span><span class="item-price">₨
+                                690</span></div>
+                    </div>
+                    <div class="menu-cat"><i class="fas fa-bread-slice"></i> Breads & Rice</div>
+                    <div class="menu-items">
+                        <div class="menu-item"><span class="item-name">Butter Naan</span><span class="item-price">₨
+                                80</span></div>
+                        <div class="menu-item"><span class="item-name">Garlic Naan</span><span class="item-price">₨
+                                120</span></div>
+                        <div class="menu-item"><span class="item-name">Chicken Pulao</span><span class="item-price">₨
+                                550</span></div>
+                        <div class="menu-item"><span class="item-name">Vegetable Biryani</span><span
+                                class="item-price">₨ 490</span></div>
+                    </div>
+                    <div class="menu-cat"><i class="fas fa-ice-cream"></i> Mithai (Desserts)</div>
+                    <div class="menu-items">
+                        <div class="menu-item"><span class="item-name">Gulab Jamun (2pcs)</span><span
+                                class="item-price">₨ 220</span></div>
+                        <div class="menu-item"><span class="item-name">Kheer (Rice pudding)</span><span
+                                class="item-price">₨ 280</span></div>
+                        <div class="menu-item"><span class="item-name">Gajar ka Halwa</span><span class="item-price">₨
+                                300</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contact">
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3 style="font-family: 'Playfair Display'; color:#f5b37a;">Visit Us</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> 122, MM Alam Road, Gulberg III, Lahore, Pakistan</p>
+                        <p><i class="fas fa-phone-alt"></i> +92 42 111 123 456</p>
+                        <p><i class="fas fa-envelope"></i> dine@lahoridarbar.pk</p>
+                        <p><i class="fas fa-clock"></i> Daily: 12:00 PM – 11:30 PM (Friday till 12 AM)</p>
+                        <div style="margin: 2rem 0 0 0;">
+                            <i class="fab fa-instagram" style="font-size: 1.6rem; margin-right: 1rem;"></i>
+                            <i class="fab fa-facebook" style="font-size: 1.6rem; margin-right: 1rem;"></i>
+                            <i class="fab fa-tripadvisor" style="font-size: 1.6rem;"></i>
+                        </div>
+                    </div>
+                    <div class="reserve-form">
+                        <h3 style="font-family: 'Playfair Display'; color:#f5b37a;">Reserve a Table</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 1rem;">Experience the real taste — book your table
+                            now</p>
+                        <form id="reservationForm">
+                            <input type="text" placeholder="Full Name" id="name" required>
+                            <input type="email" placeholder="Email Address" id="email" required>
+                            <input type="tel" placeholder="Phone Number" id="phone">
+                            <select id="guests">
+                                <option>2 Guests</option>
+                                <option>3 Guests</option>
+                                <option>4 Guests</option>
+                                <option>5-6 Guests</option>
+                                <option>7+ Guests</option>
+                            </select>
+                            <input type="datetime-local" id="datetime" value="2026-05-10T19:30">
+                            <textarea rows="2" placeholder="Special requests (allergies/occasion)"></textarea>
+                            <button type="submit" class="btn btn-primary"
+                                style="background:#f5b37a; color:#2c1e12;">Confirm Booking</button>
+                        </form>
+                        <p id="formMessage" style="margin-top: 0.8rem; font-size:0.85rem;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Lahori Darbar — Authentic Pakistani Cuisine | Designed with <i class="fas fa-heart"
+                style="color:#b85c1a;"></i> for Lahore's soul</p>
+        <p style="margin-top: 0.5rem;">📍 Follow us for live Qawwali nights & BBQ fest every Sunday</p>
+    </footer>
+
+    <!-- AI Companion Widget -->
+    <div class="ai-companion">
+        <button class="ai-toggle" id="aiToggleBtn">
+            <i class="fas fa-robot"></i>
+        </button>
+        <div id="aiChatWindow" class="ai-chat-window hidden">
+            <div class="ai-header">
+                <div class="ai-avatar"><i class="fas fa-utensil-spoon"></i></div>
+                <h4>Lahori Darbar AI</h4>
+                <button class="ai-close" id="aiCloseBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="ai-messages" id="aiMessages">
+                <div class="message bot-message">Salam! I'm your Lahori Darbar companion 🧆. Ask me about our menu,
+                    special dishes, timings, or make a reservation. What would you like to know?</div>
+            </div>
+            <div class="ai-input-area">
+                <input type="text" id="aiUserInput" placeholder="Ask me anything..." autocomplete="off">
+                <button id="aiSendBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Reservation form logic
+        const form = document.getElementById('reservationForm');
+        const messageSpan = document.getElementById('formMessage');
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const guests = document.getElementById('guests').value;
+            if (!name || !email) {
+                messageSpan.innerHTML = '❌ Please enter name and email address.';
+                messageSpan.style.color = "#ffccaa";
+                return;
+            }
+            messageSpan.innerHTML = `✅ Thank you ${name}! Your table for ${guests} is reserved. We'll send confirmation to ${email}.`;
+            messageSpan.style.color = "#d4edc9";
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('datetime').value = "2026-05-10T19:30";
+            document.getElementById('guests').selectedIndex = 0;
+            setTimeout(() => { messageSpan.innerHTML = ''; }, 4000);
+        });
+
+        // AI Companion knowledge base & logic
+        const aiMessagesDiv = document.getElementById('aiMessages');
+        const userInput = document.getElementById('aiUserInput');
+        const sendBtn = document.getElementById('aiSendBtn');
+        const toggleBtn = document.getElementById('aiToggleBtn');
+        const closeBtn = document.getElementById('aiCloseBtn');
+        const chatWindow = document.getElementById('aiChatWindow');
+
+        toggleBtn.addEventListener('click', () => {
+            chatWindow.classList.toggle('hidden');
+        });
+        closeBtn.addEventListener('click', () => {
+            chatWindow.classList.add('hidden');
+        });
+
+        function addMessage(text, isUser = false) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            msgDiv.textContent = text;
+            aiMessagesDiv.appendChild(msgDiv);
+            aiMessagesDiv.scrollTop = aiMessagesDiv.scrollHeight;
+        }
+
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.textContent = 'Chef AI is thinking... 🧑‍🍳';
+            aiMessagesDiv.appendChild(typingDiv);
+            aiMessagesDiv.scrollTop = aiMessagesDiv.scrollHeight;
+        }
+
+        function removeTyping() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        // Smart reply system
+        function getBotResponse(userMsg) {
+            const msg = userMsg.toLowerCase().trim();
+            if (msg.includes('hello') || msg.includes('salam') || msg.includes('hi') || msg === 'hey') {
+                return "Assalam-o-Alaikum! Welcome to Lahori Darbar. Would you like to know today's special, view menu items, or book a table?";
+            }
+            if (msg.includes('special') || msg.includes('recommend') || msg.includes('best dish')) {
+                return "Our top recommendations: Lahori Chargha (whole spiced chicken), Beef Seekh Kebabs, and the creamy Butter Chicken. For vegetarians, try Daal Makhani with Garlic Naan! 🍗🥘";
+            }
+            if (msg.includes('biryani')) {
+                return "Our Lahori Biryani is made with premium basmati, tender beef/potato and secret spice mix – a customer favorite! Only ₨ 950. Would you like to reserve?";
+            }
+            if (msg.includes('karahi') || msg.includes('chicken karahi')) {
+                return "Lahori Chicken Karahi is cooked in a wok with fresh tomatoes, ginger, and green chilies. Served with naan — absolutely authentic! Price ₨ 1350.";
+            }
+            if (msg.includes('timing') || msg.includes('hour') || msg.includes('open') || msg.includes('close')) {
+                return "We're open daily from 12:00 PM to 11:30 PM. On Fridays, we extend till 12:00 AM. Kitchen closes 30 mins before closing time.";
+            }
+            if (msg.includes('location') || msg.includes('address') || msg.includes('where')) {
+                return "📍 We are located at 122, MM Alam Road, Gulberg III, Lahore. Easy to find near the Liberty roundabout! Would you like directions?";
+            }
+            if (msg.includes('reservation') || msg.includes('book') || msg.includes('table')) {
+                return "You can reserve a table using the reservation form below, or just tell me your name, guests, and time so I can help pre-book! 😊 For now, please try the booking section.";
+            }
+            if (msg.includes('price') || msg.includes('cost') || msg.includes('rate')) {
+                return "Our Butter Chicken is ₨1250, Lahori Biryani ₨950, Seekh Kebabs ₨1100, and Mutton Handi ₨1650. Prices inclusive of tax. Want full menu PDF?";
+            }
+            if (msg.includes('thank')) {
+                return "You're most welcome! It's our pleasure serving you authentic taste. Khuda Hafiz! 🥰";
+            }
+            if (msg.includes('vegetarian') || msg.includes('veg')) {
+                return "We have delicious vegetarian dishes: Palak Paneer (₨690), Daal Makhani (₨750), Vegetable Biryani (₨490), and Gajar ka Halwa for dessert!";
+            }
+            return "I can help with menu recommendations, restaurant hours, location, or special Pakistani dishes. Could you rephrase your question? For reservations, please scroll to the booking form!";
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+            addMessage(text, true);
+            userInput.value = '';
+            showTyping();
+            // simulate AI thinking + response
+            setTimeout(() => {
+                removeTyping();
+                const reply = getBotResponse(text);
+                addMessage(reply, false);
+            }, 500 + Math.random() * 400);
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Nav highlight scroll
+        const sections = document.querySelectorAll('#home, #menu, #about, #contact');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const scrollPos = window.scrollY + 150;
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                } else if (current === '' && link.getAttribute('href') === '#home') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

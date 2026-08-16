@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZONE ONE // Mobile Esports Tournaments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0B0E11;
+    --steel:#151A21;
+    --steel-2:#1D242D;
+    --line: rgba(201,206,214,0.12);
+    --amber:#FFB800;
+    --red:#FF3B30;
+    --teal:#00E5C7;
+    --fog:#C9CED6;
+    --white:#F5F6F8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--void);
+    color:var(--fog);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Teko',sans-serif;
+    font-weight:600;
+    letter-spacing:0.01em;
+    color:var(--white);
+    line-height:0.95;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
+
+  
+  .ticker-bar{
+    background:var(--steel);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+    white-space:nowrap;
+    padding:8px 0;
+    position:relative;
+    z-index:40;
+  }
+  .ticker-track{
+    display:inline-block;
+    padding-left:100%;
+    animation:ticker 32s linear infinite;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.04em;
+    color:var(--fog);
+  }
+  .ticker-track span{margin-right:48px;}
+  .ticker-track .dot{color:var(--red);}
+  .ticker-track .dot-teal{color:var(--teal);}
+  .ticker-track .dot-amber{color:var(--amber);}
+  @keyframes ticker{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-100%);}
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,14,17,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px;
+  }
+  .logo{
+    font-family:'Teko',sans-serif; font-size:28px; font-weight:700;
+    color:var(--white); display:flex; align-items:center; gap:8px;
+    letter-spacing:0.02em;
+  }
+  .logo .sq{width:10px;height:10px;background:var(--amber);display:inline-block; transform:rotate(45deg);}
+  .nav-links{display:flex; gap:32px; align-items:center;}
+  .nav-links a{
+    font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:var(--fog);
+    font-weight:600; transition:color .2s;
+  }
+  .nav-links a:hover{color:var(--amber);}
+  .nav-cta{
+    background:var(--amber); color:var(--void); padding:9px 18px;
+    font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+  }
+  .nav-cta:hover{background:var(--white);}
+  @media (max-width:820px){ .nav-links{display:none;} }
+
+  
+  .hero{
+    position:relative;
+    padding:110px 0 90px;
+    background:
+      radial-gradient(circle at 82% 20%, rgba(255,184,0,0.10), transparent 45%),
+      radial-gradient(circle at 15% 80%, rgba(0,229,199,0.08), transparent 40%),
+      var(--void);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .grid-overlay{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 75%);
+    opacity:0.5;
+  }
+  .zone-ring{
+    position:absolute; right:-140px; top:-60px;
+    width:520px; height:520px;
+    border-radius:50%;
+    border:1px solid rgba(255,184,0,0.25);
+  }
+  .zone-ring::before, .zone-ring::after{
+    content:''; position:absolute; border-radius:50%; border:1px solid rgba(255,184,0,0.15);
+  }
+  .zone-ring::before{ inset:60px; }
+  .zone-ring::after{ inset:140px; border-color:rgba(0,229,199,0.25); }
+  .zone-ring{ animation:pulse-ring 6s ease-in-out infinite; }
+  @keyframes pulse-ring{
+    0%,100%{ opacity:0.6; transform:scale(1);}
+    50%{ opacity:1; transform:scale(1.02);}
+  }
+
+  .hero-inner{position:relative; z-index:2;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:12px;
+    color:var(--amber); text-transform:uppercase; letter-spacing:0.12em;
+    border:1px solid rgba(255,184,0,0.35); padding:6px 12px; margin-bottom:24px;
+  }
+  .eyebrow .live-dot{
+    width:6px;height:6px;border-radius:50%;background:var(--red);
+    box-shadow:0 0 0 0 rgba(255,59,48,0.6);
+    animation:live 1.6s infinite;
+  }
+  @keyframes live{
+    0%{box-shadow:0 0 0 0 rgba(255,59,48,0.5);}
+    70%{box-shadow:0 0 0 8px rgba(255,59,48,0);}
+    100%{box-shadow:0 0 0 0 rgba(255,59,48,0);}
+  }
+  .hero h1{
+    font-size:clamp(52px, 8vw, 108px);
+    max-width:820px;
+  }
+  .hero h1 .accent{color:var(--amber);}
+  .hero p.sub{
+    max-width:520px; font-size:17px; line-height:1.6; margin-top:20px; color:var(--fog);
+  }
+  .hero-cta{display:flex; gap:14px; margin-top:36px; flex-wrap:wrap;}
+  .btn-primary, .btn-ghost{
+    padding:14px 26px; font-weight:700; font-size:14px; text-transform:uppercase;
+    letter-spacing:0.06em; display:inline-flex; align-items:center; gap:10px;
+    transition:all .2s;
+  }
+  .btn-primary{background:var(--amber); color:var(--void);}
+  .btn-primary:hover{background:var(--white);}
+  .btn-ghost{border:1px solid var(--line); color:var(--white);}
+  .btn-ghost:hover{border-color:var(--amber); color:var(--amber);}
+
+  /* countdown */
+  .countdown{
+    display:flex; gap:22px; margin-top:56px; flex-wrap:wrap;
+  }
+  .cd-unit{text-align:left;}
+  .cd-num{
+    font-family:'JetBrains Mono',monospace; font-size:38px; font-weight:700; color:var(--white);
+    border-bottom:2px solid var(--amber); padding-bottom:4px; min-width:64px; display:inline-block;
+  }
+  .cd-label{font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--fog); margin-top:6px;}
+
+  /* ---------- SECTION HEADER ---------- */
+  .section{padding:100px 0;}
+  .section-tight{padding:70px 0;}
+  .sec-head{margin-bottom:56px; max-width:640px;}
+  .sec-tag{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--teal);
+    text-transform:uppercase; letter-spacing:0.14em; margin-bottom:14px; display:block;
+  }
+  .sec-head h2{font-size:clamp(36px,5vw,54px);}
+  .sec-head p{margin-top:14px; font-size:15.5px; line-height:1.65; color:var(--fog);}
+
+  /* ---------- GAME CARDS ---------- */
+  .games-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:22px;
+  }
+  @media (max-width:900px){ .games-grid{grid-template-columns:1fr;} }
+  .game-card{
+    background:linear-gradient(180deg, var(--steel), var(--steel-2));
+    border:1px solid var(--line);
+    padding:32px 26px 28px;
+    position:relative;
+    overflow:hidden;
+    transition:transform .25s, border-color .25s;
+  }
+  .game-card:hover{ transform:translateY(-6px); border-color:var(--card-accent, var(--amber)); }
+  .game-card .icon-wrap{
+    width:64px; height:64px; margin-bottom:24px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .game-card .tag{
+    font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.1em; color:var(--card-accent, var(--amber)); margin-bottom:10px; display:block;
+  }
+  .game-card h3{font-size:34px; margin-bottom:10px;}
+  .game-card p.desc{font-size:14px; line-height:1.6; color:var(--fog); margin-bottom:24px; min-height:64px;}
+  .stat-row{
+    display:flex; justify-content:space-between; padding:12px 0; border-top:1px solid var(--line);
+    font-size:13px;
+  }
+  .stat-row:last-of-type{border-bottom:1px solid var(--line);}
+  .stat-row .k{color:var(--fog); text-transform:uppercase; letter-spacing:0.05em; font-size:11.5px;}
+  .stat-row .v{font-family:'JetBrains Mono',monospace; color:var(--white); font-weight:700;}
+  .game-card .join-btn{
+    display:block; margin-top:22px; text-align:center; padding:12px;
+    border:1px solid var(--card-accent, var(--amber)); color:var(--card-accent, var(--amber));
+    font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+    transition:all .2s;
+  }
+  .game-card .join-btn:hover{ background:var(--card-accent, var(--amber)); color:var(--void); }
+
+  /* corner deco */
+  .corner-deco{position:absolute; top:0; right:0; width:90px; height:90px; opacity:0.5;}
+
+  /* ---------- SCHEDULE / BRACKET ---------- */
+  .schedule{
+    border:1px solid var(--line);
+    background:var(--steel);
+  }
+  .sched-row{
+    display:grid; grid-template-columns:100px 1fr 140px 120px;
+    align-items:center; padding:18px 24px; border-bottom:1px solid var(--line);
+    font-size:14px; gap:12px;
+  }
+  .sched-row:last-child{border-bottom:none;}
+  .sched-row.head{
+    font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--fog); background:rgba(255,255,255,0.02);
+  }
+  .sched-row .day{font-family:'JetBrains Mono',monospace; color:var(--amber); font-weight:700;}
+  .sched-row .match strong{color:var(--white); font-weight:600;}
+  .sched-row .match span{display:block; font-size:12px; color:var(--fog); margin-top:2px;}
+  .status-pill{
+    font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 10px;
+    text-transform:uppercase; letter-spacing:0.05em; text-align:center; border:1px solid;
+  }
+  .status-pill.open{color:var(--teal); border-color:var(--teal);}
+  .status-pill.soon{color:var(--amber); border-color:var(--amber);}
+  .status-pill.closed{color:var(--fog); border-color:var(--line);}
+  @media (max-width:700px){
+    .sched-row{grid-template-columns:1fr; gap:6px; text-align:left;}
+    .sched-row.head{display:none;}
+  }
+
+  /* ---------- PRIZE POOL ---------- */
+  .prize-strip{
+    display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line);
+  }
+  @media (max-width:800px){ .prize-strip{grid-template-columns:1fr;} }
+  .prize-cell{
+    padding:36px 30px; border-right:1px solid var(--line);
+  }
+  .prize-cell:last-child{border-right:none;}
+  .prize-cell .total{
+    font-family:'JetBrains Mono',monospace; font-size:42px; color:var(--white); font-weight:700;
+  }
+  .prize-cell .label{font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--fog); margin-top:6px;}
+  .prize-cell .split{margin-top:22px; display:flex; flex-direction:column; gap:8px;}
+  .split-row{display:flex; justify-content:space-between; font-size:13px;}
+  .split-row .place{color:var(--fog);}
+  .split-row .amt{font-family:'JetBrains Mono',monospace; color:var(--card-accent,var(--amber));}
+
+  /* ---------- FORMAT / RULES ACCORDION ---------- */
+  .accordion{border-top:1px solid var(--line);}
+  .acc-item{border-bottom:1px solid var(--line);}
+  .acc-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 4px; cursor:pointer; font-size:19px; color:var(--white);
+    font-family:'Teko',sans-serif; font-weight:500; letter-spacing:0.01em;
+  }
+  .acc-head .plus{font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:20px; transition:transform .25s;}
+  .acc-item.open .plus{transform:rotate(45deg);}
+  .acc-body{
+    max-height:0; overflow:hidden; transition:max-height .3s ease;
+    font-size:14.5px; line-height:1.7; color:var(--fog);
+  }
+  .acc-body-in{padding-bottom:20px; max-width:700px;}
+
+  /* ---------- REGISTER ---------- */
+  .register{
+    background:var(--steel);
+    border:1px solid var(--line);
+    padding:48px;
+    display:grid; grid-template-columns:1fr 1fr; gap:48px;
+  }
+  @media (max-width:820px){ .register{grid-template-columns:1fr; padding:32px 24px;} }
+  .register h2{font-size:42px; margin-bottom:14px;}
+  .register p{font-size:14.5px; color:var(--fog); line-height:1.6;}
+  .reg-points{margin-top:24px; display:flex; flex-direction:column; gap:12px;}
+  .reg-points div{display:flex; gap:10px; font-size:13.5px; align-items:flex-start;}
+  .reg-points .m{color:var(--teal); font-family:'JetBrains Mono',monospace;}
+  form{display:flex; flex-direction:column; gap:16px;}
+  .field label{
+    font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--fog);
+    display:block; margin-bottom:8px;
+  }
+  .field input, .field select{
+    width:100%; background:var(--void); border:1px solid var(--line); color:var(--white);
+    padding:12px 14px; font-family:'Inter',sans-serif; font-size:14px;
+  }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--amber); }
+  .submit-btn{
+    background:var(--amber); color:var(--void); border:none; padding:14px;
+    font-weight:700; text-transform:uppercase; letter-spacing:0.06em; font-size:14px;
+    cursor:pointer; margin-top:8px; transition:background .2s;
+  }
+  .submit-btn:hover{background:var(--white);}
+  .submit-note{font-size:11.5px; color:var(--fog); margin-top:4px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line); padding:48px 0 32px;
+  }
+  .foot-inner{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; align-items:center;
+  }
+  .foot-links{display:flex; gap:24px;}
+  .foot-links a{font-size:13px; color:var(--fog);}
+  .foot-links a:hover{color:var(--amber);}
+  .foot-copy{font-size:12px; color:var(--fog); opacity:0.6; margin-top:24px;}
+
+  ::selection{background:var(--amber); color:var(--void);}
+</style>
+</head>
+<body>
+
+<div class="ticker-bar">
+  <div class="ticker-track">
+    <span><span class="dot">●</span> LIVE — PUBG MOBILE SQUAD SHOWDOWN, GROUP B IN PROGRESS</span>
+    <span><span class="dot-teal">●</span> DELTA FORCE MOBILE OPEN QUALIFIERS CLOSE IN 3 DAYS</span>
+    <span><span class="dot-amber">●</span> COD MOBILE 5V5 RANKED CUP — REGISTRATIONS OPEN</span>
+    <span><span class="dot">●</span> TOTAL PRIZE POOL THIS SEASON: PKR 850,000</span>
+    <span><span class="dot-teal">●</span> NEXT CHECK-IN WINDOW OPENS FRIDAY 6:00 PM PKT</span>
+    <span><span class="dot-amber">●</span> 214 SQUADS REGISTERED SO FAR</span>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner wrap" style="padding-left:0; padding-right:0;">
+    <div class="logo"><span class="sq"></span>ZONE ONE</div>
+    <div class="nav-links">
+      <a href="#games">Games</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#prizes">Prize Pool</a>
+      <a href="#rules">Format</a>
+      <a href="#register">Register</a>
+    </div>
+    <a href="#register" class="nav-cta">Register Squad</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="grid-overlay"></div>
+  <div class="zone-ring"></div>
+  <div class="wrap hero-inner">
+    <div class="eyebrow"><span class="live-dot"></span> SEASON 4 · OPEN NOW</div>
+    <h1>DROP IN.<br>CLEAR THE <span class="accent">ZONE.</span><br>TAKE THE POOL.</h1>
+    <p class="sub">Mobile tournaments for PUBG Mobile, Delta Force Mobile and Call of Duty Mobile. Bracket play, live check-ins, and a prize pool paid out in full — no gatekeeping, no entry fee traps.</p>
+    <div class="hero-cta">
+      <a href="#register" class="btn-primary">Register Your Squad →</a>
+      <a href="#schedule" class="btn-ghost">View Match Schedule</a>
+    </div>
+    <div class="countdown" id="countdown">
+      <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-label">Days</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-label">Hours</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-label">Mins</div></div>
+      <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-label">Secs</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="games">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">/// Choose Your Battlefield</span>
+      <h2>Three games. One bracket system.</h2>
+      <p>Every title runs its own ladder, its own prize split, and its own match rules — pick where your squad plays.</p>
+    </div>
+    <div class="games-grid">
+
+      <div class="game-card" style="--card-accent:#FFB800;">
+        <svg class="corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="70" cy="20" r="34" stroke="#FFB800" stroke-opacity="0.25"/><circle cx="70" cy="20" r="18" stroke="#FFB800" stroke-opacity="0.35"/></svg>
+        <div class="icon-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <circle cx="26" cy="26" r="24" stroke="#FFB800" stroke-width="1.5"/>
+            <circle cx="26" cy="26" r="15" stroke="#FFB800" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <path d="M26 4V10M26 42V48M4 26H10M42 26H48" stroke="#FFB800" stroke-width="2"/>
+            <circle cx="26" cy="26" r="3" fill="#FFB800"/>
+          </svg>
+        </div>
+        <span class="tag">Battle Royale · Squad</span>
+        <h3>PUBG Mobile</h3>
+        <p class="desc">4-man squads, classic map rotation, standard loot rules. Placement + kill points decide the ladder.</p>
+        <div class="stat-row"><span class="k">Format</span><span class="v">Squad TPP · 4v4v4...</span></div>
+        <div class="stat-row"><span class="k">Entry Fee</span><span class="v">PKR 1,500 / squad</span></div>
+        <div class="stat-row"><span class="k">Matches</span><span class="v">6 rounds · Erangel/Miramar</span></div>
+        <a href="#register" class="join-btn">Join This Ladder</a>
+      </div>
+
+      <div class="game-card" style="--card-accent:#00E5C7;">
+        <svg class="corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="70" cy="20" r="34" stroke="#00E5C7" stroke-opacity="0.25"/><circle cx="70" cy="20" r="18" stroke="#00E5C7" stroke-opacity="0.35"/></svg>
+        <div class="icon-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <path d="M26 4L46 26L26 48L6 26L26 4Z" stroke="#00E5C7" stroke-width="1.5"/>
+            <path d="M26 14L38 26L26 38L14 26L26 14Z" stroke="#00E5C7" stroke-width="1.5" stroke-dasharray="2 2"/>
+            <circle cx="26" cy="26" r="3" fill="#00E5C7"/>
+          </svg>
+        </div>
+        <span class="tag">Tactical Extraction</span>
+        <h3>Delta Force Mobile</h3>
+        <p class="desc">Hazard Operations & squad deathmatch mix. Loadout discipline and objective control decide winners.</p>
+        <div class="stat-row"><span class="k">Format</span><span class="v">Squad · Extraction + TDM</span></div>
+        <div class="stat-row"><span class="k">Entry Fee</span><span class="v">PKR 1,200 / squad</span></div>
+        <div class="stat-row"><span class="k">Matches</span><span class="v">5 rounds · Best of 3 finals</span></div>
+        <a href="#register" class="join-btn">Join This Ladder</a>
+      </div>
+
+      <div class="game-card" style="--card-accent:#FF3B30;">
+        <svg class="corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="70" cy="20" r="34" stroke="#FF3B30" stroke-opacity="0.25"/><circle cx="70" cy="20" r="18" stroke="#FF3B30" stroke-opacity="0.35"/></svg>
+        <div class="icon-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <circle cx="26" cy="26" r="22" stroke="#FF3B30" stroke-width="1.5"/>
+            <path d="M26 6V16M26 36V46M6 26H16M36 26H46" stroke="#FF3B30" stroke-width="2"/>
+            <circle cx="26" cy="26" r="4" stroke="#FF3B30" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <span class="tag">5v5 Ranked</span>
+        <h3>Call of Duty Mobile</h3>
+        <p class="desc">Search & Destroy plus Hardpoint rotation. Best-of-three series from quarterfinals onward.</p>
+        <div class="stat-row"><span class="k">Format</span><span class="v">5v5 · S&D / Hardpoint</span></div>
+        <div class="stat-row"><span class="k">Entry Fee</span><span class="v">PKR 2,000 / team</span></div>
+        <div class="stat-row"><span class="k">Matches</span><span class="v">Single elim · Bo3 finals</span></div>
+        <a href="#register" class="join-btn">Join This Ladder</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" id="schedule">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">/// Match Schedule</span>
+      <h2>This week on the bracket.</h2>
+    </div>
+    <div class="schedule">
+      <div class="sched-row head">
+        <div>Day</div><div>Match</div><div>Game</div><div>Status</div>
+      </div>
+      <div class="sched-row">
+        <div class="day">FRI</div>
+        <div class="match"><strong>Group B — Round 3</strong><span>Erangel, standard loot</span></div>
+        <div>PUBG Mobile</div>
+        <div class="status-pill open">Live Soon</div>
+      </div>
+      <div class="sched-row">
+        <div class="day">SAT</div>
+        <div class="match"><strong>Open Qualifier — Bracket 2</strong><span>Hazard Operations</span></div>
+        <div>Delta Force Mobile</div>
+        <div class="status-pill open">Reg Open</div>
+      </div>
+      <div class="sched-row">
+        <div class="day">SAT</div>
+        <div class="match"><strong>Ranked Cup — Quarterfinals</strong><span>Search & Destroy, Bo3</span></div>
+        <div>COD Mobile</div>
+        <div class="status-pill soon">Starts Soon</div>
+      </div>
+      <div class="sched-row">
+        <div class="day">SUN</div>
+        <div class="match"><strong>Grand Finals</strong><span>Miramar, top 16 squads</span></div>
+        <div>PUBG Mobile</div>
+        <div class="status-pill closed">Invite Only</div>
+      </div>
+      <div class="sched-row">
+        <div class="day">SUN</div>
+        <div class="match"><strong>Ranked Cup — Final</strong><span>Hardpoint, Bo5</span></div>
+        <div>COD Mobile</div>
+        <div class="status-pill closed">Invite Only</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="prizes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">/// Prize Pool</span>
+      <h2>PKR 850,000 across three titles.</h2>
+      <p>Paid directly to winning squad captains within 72 hours of the grand final — no processing delays.</p>
+    </div>
+    <div class="prize-strip">
+      <div class="prize-cell" style="--card-accent:#FFB800;">
+        <div class="total">₨320K</div>
+        <div class="label">PUBG Mobile Pool</div>
+        <div class="split">
+          <div class="split-row"><span class="place">1st Squad</span><span class="amt">₨180,000</span></div>
+          <div class="split-row"><span class="place">2nd Squad</span><span class="amt">₨90,000</span></div>
+          <div class="split-row"><span class="place">3rd Squad</span><span class="amt">₨50,000</span></div>
+        </div>
+      </div>
+      <div class="prize-cell" style="--card-accent:#00E5C7;">
+        <div class="total">₨230K</div>
+        <div class="label">Delta Force Mobile Pool</div>
+        <div class="split">
+          <div class="split-row"><span class="place">1st Squad</span><span class="amt">₨130,000</span></div>
+          <div class="split-row"><span class="place">2nd Squad</span><span class="amt">₨65,000</span></div>
+          <div class="split-row"><span class="place">3rd Squad</span><span class="amt">₨35,000</span></div>
+        </div>
+      </div>
+      <div class="prize-cell" style="--card-accent:#FF3B30;">
+        <div class="total">₨300K</div>
+        <div class="label">COD Mobile Pool</div>
+        <div class="split">
+          <div class="split-row"><span class="place">1st Team</span><span class="amt">₨170,000</span></div>
+          <div class="split-row"><span class="place">2nd Team</span><span class="amt">₨85,000</span></div>
+          <div class="split-row"><span class="place">3rd Team</span><span class="amt">₨45,000</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" id="rules">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">/// Format & Rules</span>
+      <h2>How the ladder actually works.</h2>
+    </div>
+    <div class="accordion" id="accordion">
+      <div class="acc-item open">
+        <div class="acc-head"><span>Check-in & no-shows</span><span class="plus">+</span></div>
+        <div class="acc-body"><div class="acc-body-in">Squads must check in through the WhatsApp group 30 minutes before their scheduled slot. Two missed check-ins in a season forfeit the match and any paid entry fee.</div></div>
+      </div>
+      <div class="acc-item">
+        <div class="acc-head"><span>Scoring system</span><span class="plus">+</span></div>
+        <div class="acc-body"><div class="acc-body-in">PUBG Mobile and Delta Force Mobile use placement points plus 1 point per elimination. COD Mobile is straight series score — best of three until the semifinals, best of five in the final.</div></div>
+      </div>
+      <div class="acc-item">
+        <div class="acc-head"><span>Anti-cheat & fair play</span><span class="plus">+</span></div>
+        <div class="acc-body"><div class="acc-body-in">Screen recording is required for all squads from the semifinals onward. Any use of emulator exploits, third-party aim tools, or teaming results in immediate disqualification and forfeiture of prize eligibility.</div></div>
+      </div>
+      <div class="acc-item">
+        <div class="acc-head"><span>Refunds</span><span class="plus">+</span></div>
+        <div class="acc-body"><div class="acc-body-in">Entry fees are refunded in full if a bracket is cancelled before its first match. Once the bracket starts, fees are non-refundable regardless of match outcome.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="register">
+  <div class="wrap">
+    <div class="register">
+      <div>
+        <span class="sec-tag">/// Registration</span>
+        <h2>Get your squad on the bracket.</h2>
+        <p>Fill in your details and we'll open a WhatsApp chat pre-filled with your registration — a tournament admin confirms your slot and sends the entry fee details directly.</p>
+        <div class="reg-points">
+          <div><span class="m">01</span> Confirmation and match slot sent over WhatsApp within 24 hours</div>
+          <div><span class="m">02</span> Entry fee paid directly to the admin, not through this form</div>
+          <div><span class="m">03</span> Squads are locked once the entry fee is confirmed</div>
+        </div>
+      </div>
+      <form id="regForm">
+        <div class="field">
+          <label for="squad">Squad / Team Name</label>
+          <input type="text" id="squad" required placeholder="e.g. Lahore Reapers">
+        </div>
+        <div class="field">
+          <label for="game">Game</label>
+          <select id="game" required>
+            <option value="">Select a game</option>
+            <option>PUBG Mobile</option>
+            <option>Delta Force Mobile</option>
+            <option>Call of Duty Mobile</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ign">Captain In-Game Name</label>
+          <input type="text" id="ign" required placeholder="Your IGN">
+        </div>
+        <div class="field">
+          <label for="whatsapp">WhatsApp Number</label>
+          <input type="tel" id="whatsapp" required placeholder="03XX-XXXXXXX">
+        </div>
+        <button type="submit" class="submit-btn">Send Registration →</button>
+        <div class="submit-note">Opens WhatsApp with your details pre-filled. No account needed.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div class="logo"><span class="sq"></span>ZONE ONE</div>
+    <div class="foot-links">
+      <a href="#games">Games</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#prizes">Prize Pool</a>
+      <a href="#rules">Format</a>
+    </div>
+  </div>
+  <div class="wrap foot-copy">ZONE ONE Mobile Esports · Lahore, Pakistan · Tournament outcomes are decided by in-match results only.</div>
+</footer>
+
+<script>
+  // Countdown to next Friday 18:00 local time
+  function nextFriday6pm(){
+    const now = new Date();
+    const result = new Date(now);
+    const day = now.getDay(); // 0 Sun .. 6 Sat
+    let daysUntilFriday = (5 - day + 7) % 7;
+    result.setDate(now.getDate() + daysUntilFriday);
+    result.setHours(18,0,0,0);
+    if(result <= now){ result.setDate(result.getDate() + 7); }
+    return result;
+  }
+  const target = nextFriday6pm();
+  function pad(n){ return n.toString().padStart(2,'0'); }
+  function tick(){
+    const now = new Date();
+    let diff = Math.max(0, target - now);
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor((diff / (1000*60*60)) % 24);
+    const m = Math.floor((diff / (1000*60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+    document.getElementById('cd-d').textContent = pad(d);
+    document.getElementById('cd-h').textContent = pad(h);
+    document.getElementById('cd-m').textContent = pad(m);
+    document.getElementById('cd-s').textContent = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // Accordion
+  document.querySelectorAll('.acc-item').forEach(item=>{
+    const head = item.querySelector('.acc-head');
+    const body = item.querySelector('.acc-body');
+    if(item.classList.contains('open')){
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+    head.addEventListener('click', ()=>{
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.acc-item').forEach(i=>{
+        i.classList.remove('open');
+        i.querySelector('.acc-body').style.maxHeight = null;
+      });
+      if(!isOpen){
+        item.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  });
+
+  
+  document.getElementById('regForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const squad = document.getElementById('squad').value.trim();
+    const game = document.getElementById('game').value;
+    const ign = document.getElementById('ign').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const adminNumber = '923001234567'; // TODO: replace with real tournament admin WhatsApp number
+    const message = `New Tournament Registration%0A—%0ASquad: ${encodeURIComponent(squad)}%0AGame: ${encodeURIComponent(game)}%0ACaptain IGN: ${encodeURIComponent(ign)}%0AContact: ${encodeURIComponent(whatsapp)}`;
+    window.open(`https://wa.me/${adminNumber}?text=${message}`, '_blank');
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>⚡ N3URON || GHOST PROTOCOL v7.2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            /* enhanced immersion */
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #010a02, #000000);
+            color: #0f0;
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        /* CRT + scanlines + glow */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.02) 0px, rgba(0, 255, 0, 0.02) 2px, transparent 2px, transparent 4px);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.7) 110%);
+            pointer-events: none;
+            z-index: 998;
+            animation: flicker 0.2s infinite;
+        }
+
+        @keyframes flicker {
+            0% {
+                opacity: 0.95;
+            }
+
+            5% {
+                opacity: 0.85;
+            }
+
+            10% {
+                opacity: 0.97;
+            }
+
+            90% {
+                opacity: 0.92;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* custom neon cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #0f0;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #0f0, inset 0 0 5px #0f0;
+            background: rgba(0, 255, 0, 0.1);
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.03s linear;
+            backdrop-filter: blur(1px);
+        }
+
+        /* MAIN GRID LAYOUT — enhanced immersion */
+        .grid-master {
+            display: grid;
+            grid-template-columns: 280px 1fr 260px;
+            grid-template-rows: 44px 1fr 34px;
+            height: 100vh;
+            width: 100vw;
+            gap: 1px;
+            background: #0a3b0a;
+            padding: 1px;
+        }
+
+        .glass-panel {
+            background: #010a01ee;
+            backdrop-filter: blur(2px);
+            border: 1px solid #1f9e2e;
+            box-shadow: 0 0 8px rgba(0, 255, 65, 0.2);
+            overflow: hidden;
+        }
+
+        .panel-head {
+            background: #051f05;
+            padding: 5px 12px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #6eff6e;
+            border-bottom: 1px solid #1f9e2e;
+            display: flex;
+            justify-content: space-between;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        /* TOP BAR — CYBERPUNK */
+        .top-cyber {
+            grid-column: 1 / -1;
+            background: #010d01;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 2px solid #2eff2e;
+            box-shadow: 0 0 18px rgba(0, 255, 0, 0.4);
+        }
+
+        .logo-glow {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 26px;
+            background: linear-gradient(135deg, #b3ffb3, #00cc44);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            text-shadow: 0 0 8px #00ff44;
+        }
+
+        .status-badge {
+            display: flex;
+            gap: 28px;
+            margin-left: 40px;
+            font-size: 12px;
+            flex: 1;
+        }
+
+        .blink-led {
+            width: 8px;
+            height: 8px;
+            background: #0f0;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #0f0;
+            animation: pulse 1s infinite;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .clock-digital {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            color: #0ff;
+            text-shadow: 0 0 6px cyan;
+            letter-spacing: 2px;
+        }
+
+        /* TARGETS ZONE */
+        #target-container {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .target-card {
+            padding: 8px 12px;
+            border-bottom: 1px solid #0c3f0c;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .target-card:hover {
+            background: #0c2a0c;
+            border-left: 3px solid #0f0;
+        }
+
+        .active-target {
+            background: #0b2a0b;
+            border-left: 4px solid #0f0;
+            box-shadow: inset 0 0 6px #0f0;
+        }
+
+        .target-ip {
+            font-weight: bold;
+            color: #6eff6e;
+        }
+
+        .target-status-badge {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 9px;
+        }
+
+        .vuln {
+            background: #3c0000;
+            color: #ff5e5e;
+            border: 1px solid red;
+        }
+
+        .pwned {
+            background: #1e3a00;
+            color: #ffff88;
+        }
+
+        .secure {
+            background: #0a2a0a;
+            color: #4cae4c;
+        }
+
+        /* TERMINAL STYLES */
+        #term-window {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #term-output-area {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.6;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .term-line {
+            display: block;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 2px;
+        }
+
+        .input-line {
+            display: flex;
+            padding: 8px 12px;
+            background: #031003;
+            border-top: 1px solid #1f9e2e;
+            align-items: center;
+        }
+
+        #term-prompt {
+            color: #0ff;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        #term-input-field {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #0f0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+            width: 100%;
+            caret-color: #0f0;
+        }
+
+        /* RIGHT PANEL STATS */
+        .stat-block {
+            padding: 10px;
+            border-bottom: 1px solid #103010;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #5caa5c;
+            letter-spacing: 1px;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            color: #7eff7e;
+        }
+
+        .progress-bar-bg {
+            background: #112211;
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #0f0;
+            width: 0%;
+            height: 100%;
+            box-shadow: 0 0 4px #0f0;
+        }
+
+        /* bottom bar */
+        .bottom-neo {
+            grid-column: 1 / -1;
+            background: #031003;
+            display: flex;
+            padding: 0 18px;
+            align-items: center;
+            gap: 25px;
+            border-top: 1px solid #0f0;
+            font-size: 11px;
+        }
+
+        .hacker-alert {
+            color: #ff3366;
+            animation: glitch 0.6s infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                opacity: 1;
+                text-shadow: -1px 0 red;
+            }
+
+            50% {
+                opacity: 0.8;
+                text-shadow: 1px 0 cyan;
+            }
+
+            100% {
+                opacity: 1;
+                text-shadow: 0px 0 red;
+            }
+        }
+
+        /* overlay hack attack */
+        .hack-overlay-modern {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000f00dd;
+            backdrop-filter: blur(14px);
+            border: 2px solid #0f0;
+            border-radius: 24px;
+            padding: 30px 48px;
+            z-index: 5000;
+            min-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 80px #0f0;
+        }
+
+        .matrix-canvas-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 4999;
+            transition: opacity 0.5s;
+        }
+
+        .matrix-visible {
+            opacity: 0.22;
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #0f0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="custom-cursor" id="cursorFX"></div>
+    <canvas id="matrixCanvas" class="matrix-canvas-layer"></canvas>
+
+    <div class="grid-master">
+        <!-- TOP SECTION -->
+        <div class="top-cyber">
+            <div class="logo-glow">◈ NEURON_GHOST</div>
+            <div class="status-badge">
+                <span><span class="blink-led"></span>SECURE LINK</span>
+                <span>NODE: <span style="color:#0ff">T3RMINAL_CORE</span></span>
+                <span>PROXY: <span id="dynamicProxy">193.46.255.71</span></span>
+                <span>GEOLOC: <span style="color:#0ff">ZURICH, CH</span></span>
+                <span>ANON: <span style="color:#ff66aa">FULL_MASK</span></span>
+            </div>
+            <div class="clock-digital" id="liveClock">00:00:00</div>
+        </div>
+
+        <!-- LEFT: TARGETS GRID -->
+        <div class="glass-panel">
+            <div class="panel-head">🎯 TARGET_DATABASE <span id="targetCount">14</span></div>
+            <div id="targetContainerList" style="overflow-y:auto; height:calc(100% - 38px);"></div>
+        </div>
+
+        <!-- CENTER: TERMINAL -->
+        <div class="glass-panel" id="term-window">
+            <div class="panel-head">◉ TERMINAL :: ROOT@GHOST <span style="font-size:10px">[ENC]</span></div>
+            <div id="term-output-area"></div>
+            <div class="input-line">
+                <span id="term-prompt">root@neuron:~#</span>
+                <input type="text" id="term-input-field" autofocus autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+
+        <!-- RIGHT: DYNAMIC INTELL -->
+        <div class="glass-panel">
+            <div class="panel-head">📡 CYBER_ANALYSIS</div>
+            <div style="padding:6px 0;">
+                <div class="stat-block">
+                    <div class="stat-label">⚡ KERNEL CHARGE</div>
+                    <div class="stat-number" id="cpuStat">0%</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill" id="cpuFill"></div>
+                    </div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">🧠 RAM UTIL</div>
+                    <div class="stat-number" id="ramStat">0 MB / 16384 MB</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill" id="ramFill"></div>
+                    </div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">🌐 THROUGHPUT</div>
+                    <div class="stat-number" id="netStat">↑0 kb/s ↓0 kb/s</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">💣 PAYLOADS DEPLOYED</div>
+                    <div class="stat-number" id="payloadCount">0 / 71</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill" id="payloadFill" style="background:#ff6600;"></div>
+                    </div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">🛡️ FIREWALL EVASION</div>
+                    <div class="stat-number" id="fwStatus">STEALTH_MODE</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label">📜 EVENT LOG</div>
+                    <div id="liveSyslog"
+                        style="height:140px; overflow-y:auto; font-size:9px; color:#8bc48b; font-family: monospace;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM BAR -->
+        <div class="bottom-neo">
+            <div>🔻 COMMANDS: <span style="color:#0f0">help | scan | exploit | inject | crack | wipe | matrix |
+                    clear</span></div>
+            <div>🟢 SYS_STATE: <span id="bottomSysState">IDLE</span></div>
+            <div class="hacker-alert" id="threatAlert" style="display:none;">⚠️ INTRUSION COUNTERMEASURES</div>
+        </div>
+    </div>
+
+    <!-- HACK OVERLAY (advanced) -->
+    <div id="advancedHackOverlay" class="hack-overlay-modern">
+        <div style="font-family: 'Orbitron'; font-size: 28px; text-shadow:0 0 14px #0f0;" id="overlayTitle">⚡ EXPLOIT
+            SEQUENCE</div>
+        <div style="margin:20px 0 6px; height:14px; background:#132013; border-radius:4px;">
+            <div id="overlayProgressFill" style="height:100%; width:0%; background:#0f0; border-radius:4px;"></div>
+        </div>
+        <div id="overlayPercent" style="font-size:32px; font-family: monospace;">0%</div>
+        <div id="overlayStepMsg" style="margin-top:8px; color:#b3ffb3;">initializing rootkit...</div>
+    </div>
+
+    <script>
+        // ======================== IMMERSIVE ENHANCEMENT ========================
+        // CUSTOM CURSOR
+        const cursorEl = document.getElementById('cursorFX');
+        document.addEventListener('mousemove', (e) => {
+            cursorEl.style.left = e.clientX + 'px';
+            cursorEl.style.top = e.clientY + 'px';
+        });
+
+        // CLOCK UPDATER
+        function updateClockDigital() {
+            const d = new Date();
+            document.getElementById('liveClock').innerText =
+                String(d.getHours()).padStart(2, '0') + ':' +
+                String(d.getMinutes()).padStart(2, '0') + ':' +
+                String(d.getSeconds()).padStart(2, '0');
+        }
+        setInterval(updateClockDigital, 1000);
+        updateClockDigital();
+
+        // ENHANCED MATRIX RAIN
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        let matrixCtx = matrixCanvas.getContext('2d');
+        let matrixActive = false;
+        function resizeMatrix() {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+            initMatrixDrops();
+        }
+        let matrixDrops = [];
+        function initMatrixDrops() {
+            const columns = Math.floor(matrixCanvas.width / 18);
+            matrixDrops = Array(columns).fill(1);
+        }
+        function drawMatrixRain() {
+            if (!matrixActive) return;
+            matrixCtx.fillStyle = 'rgba(0, 8, 0, 0.07)';
+            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            matrixCtx.fillStyle = '#2eff7a';
+            matrixCtx.font = '15px "Share Tech Mono"';
+            for (let i = 0; i < matrixDrops.length; i++) {
+                const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+                matrixCtx.fillText(char, i * 18, matrixDrops[i] * 16);
+                if (matrixDrops[i] * 16 > matrixCanvas.height && Math.random() > 0.975) matrixDrops[i] = 0;
+                matrixDrops[i]++;
+            }
+            requestAnimationFrame(drawMatrixRain);
+        }
+        window.addEventListener('resize', () => {
+            resizeMatrix();
+            if (matrixActive) drawMatrixRain();
+        });
+        resizeMatrix();
+
+        // TARGET LIST (enhanced + persian vibes & more targets)
+        const targetsSet = [
+            { ip: '10.10.10.2', label: 'IRGC-NUCLEAR', status: 'vuln', region: 'TEHRAN' },
+            { ip: '172.22.0.14', label: 'PETRO-CENTRAL', status: 'vuln', region: 'BUSHEHR' },
+            { ip: '192.168.77.5', label: 'RAIL-SECURITY', status: 'pwned', region: 'ESFAHAN' },
+            { ip: '185.199.13.9', label: 'OIL-TERMINAL', status: 'vuln', region: 'KHARG' },
+            { ip: '91.98.156.22', label: 'FANAVAR-DB', status: 'ok', region: 'SHIRAZ' },
+            { ip: '5.202.100.89', label: 'MFA-GATE', status: 'vuln', region: 'TEHRAN' },
+            { ip: '80.75.34.200', label: 'CITIBANK-API', status: 'ok', region: 'DUBAI' },
+            { ip: '46.51.210.10', label: 'CYBERCOM-NODE', status: 'pwned', region: 'DC' },
+            { ip: '103.86.44.12', label: 'DRONE-CMD', status: 'vuln', region: 'UNKNOWN' },
+            { ip: '203.0.113.7', label: 'SATELLITE-UPLINK', status: 'ok', region: 'ORBIT' },
+            { ip: '10.0.0.201', label: 'AI-CORE', status: 'vuln', region: 'CLOUD' },
+            { ip: '84.247.56.99', label: 'DARK-MIRROR', status: 'pwned', region: 'NORDVPN' }
+        ];
+        let currentTarget = targetsSet[0];
+        const targetContainer = document.getElementById('targetContainerList');
+        function renderTargets() {
+            targetContainer.innerHTML = '';
+            targetsSet.forEach((t, idx) => {
+                const div = document.createElement('div');
+                div.className = `target-card ${currentTarget === t ? 'active-target' : ''}`;
+                div.innerHTML = `<div><div class="target-ip">${t.ip}</div><div style="font-size:9px;color:#668866">${t.label} | ${t.region}</div></div><span class="target-status-badge ${t.status}">${t.status.toUpperCase()}</span>`;
+                div.onclick = () => {
+                    document.querySelectorAll('.target-card').forEach(c => c.classList.remove('active-target'));
+                    div.classList.add('active-target');
+                    currentTarget = t;
+                    printToTerminal(`> [TARGET] switched to ${t.ip} // ${t.label} // region: ${t.region}`, 'cyan');
+                };
+                targetContainer.appendChild(div);
+            });
+            document.getElementById('targetCount').innerText = targetsSet.length;
+        }
+        renderTargets();
+
+        // TERMINAL LOGIC
+        const termOutput = document.getElementById('term-output-area');
+        const termInput = document.getElementById('term-input-field');
+        let cmdHistory = [];
+        let histPointer = -1;
+
+        function printToTerminal(text, type = 'default') {
+            const lineSpan = document.createElement('span');
+            lineSpan.className = 'term-line';
+            let colorStyle = '';
+            if (type === 'error') colorStyle = 'color:#ff5c5c; text-shadow:0 0 2px red;';
+            else if (type === 'success') colorStyle = 'color:#aaffaa; text-shadow:0 0 2px #0f0;';
+            else if (type === 'cyan') colorStyle = 'color:#4effff;';
+            else if (type === 'warning') colorStyle = 'color:#ffcc66;';
+            else colorStyle = 'color:#8bc48b;';
+            lineSpan.style.cssText = colorStyle;
+            lineSpan.innerText = text;
+            termOutput.appendChild(lineSpan);
+            termOutput.scrollTop = termOutput.scrollHeight;
+        }
+
+        function addSyslogEvent(msg) {
+            const logDiv = document.getElementById('liveSyslog');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.innerText = `[${timestamp}] ${msg}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            if (logDiv.children.length > 14) logDiv.removeChild(logDiv.children[0]);
+        }
+
+        // Simulate payload & hack overlay
+        function showHackSequence(title, stepsArray, callback) {
+            const overlay = document.getElementById('advancedHackOverlay');
+            const fillBar = document.getElementById('overlayProgressFill');
+            const percentSpan = document.getElementById('overlayPercent');
+            const stepSpan = document.getElementById('overlayStepMsg');
+            const titleSpan = document.getElementById('overlayTitle');
+            titleSpan.innerText = title;
+            fillBar.style.width = '0%';
+            percentSpan.innerText = '0%';
+            stepSpan.innerText = stepsArray[0];
+            overlay.style.display = 'block';
+            document.getElementById('bottomSysState').innerText = 'ACTIVE';
+            document.getElementById('threatAlert').style.display = 'block';
+            matrixCanvas.classList.add('matrix-visible');
+            matrixActive = true;
+            drawMatrixRain();
+
+            let stepIdx = 0;
+            const totalSteps = stepsArray.length;
+            const interval = setInterval(() => {
+                stepIdx++;
+                const percent = Math.floor((stepIdx / totalSteps) * 100);
+                fillBar.style.width = percent + '%';
+                percentSpan.innerText = percent + '%';
+                if (stepIdx < totalSteps) stepSpan.innerText = stepsArray[stepIdx];
+                else stepSpan.innerText = '✓ DEPLOYMENT SUCCESS';
+                if (stepIdx >= totalSteps) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        document.getElementById('bottomSysState').innerText = 'IDLE';
+                        document.getElementById('threatAlert').style.display = 'none';
+                        matrixCanvas.classList.remove('matrix-visible');
+                        matrixActive = false;
+                        if (callback) callback();
+                    }, 700);
+                }
+            }, 340);
+        }
+
+        let exploitsDeployed = 0;
+        function updatePayloadStats(inc = 1) {
+            exploitsDeployed = Math.min(exploitsDeployed + inc, 71);
+            document.getElementById('payloadCount').innerText = `${exploitsDeployed} / 71`;
+            document.getElementById('payloadFill').style.width = (exploitsDeployed / 71 * 100) + '%';
+            document.getElementById('bottomSysState').innerText = exploitsDeployed > 0 ? 'ACTIVE' : 'IDLE';
+        }
+
+        // COMMANDS ENGINE (ENHANCED)
+        const commandActions = {
+            help: () => {
+                printToTerminal('\n⚡ AVAILABLE CYBER COMMANDS ⚡', 'cyan');
+                printToTerminal(' scan          — perform comprehensive port & vuln scan', 'success');
+                printToTerminal(' exploit       — launch advanced exploit chain', 'success');
+                printToTerminal(' inject        — deploy custom backdoor', 'success');
+                printToTerminal(' crack         — rainbow table brute force', 'warning');
+                printToTerminal(' wipe          — simulate log & trace wiping', 'warning');
+                printToTerminal(' matrix        — toggle matrix rain effect', 'cyan');
+                printToTerminal(' clear         — flush terminal screen', 'default');
+                printToTerminal(' status        — view target & system info\n', 'default');
+            },
+            scan: () => {
+                printToTerminal(`>> INITIATING DEEP_SCAN on ${currentTarget.ip} (${currentTarget.label})...`, 'cyan');
+                let openPorts = [];
+                const commonPorts = [22, 80, 443, 3306, 8080, 445, 3389, 5900, 1337, 5432, 27017];
+                commonPorts.forEach(p => { if (Math.random() > 0.55) openPorts.push(p); });
+                setTimeout(() => {
+                    printToTerminal(`[+] SCAN RESULTS for ${currentTarget.ip}`, 'success');
+                    openPorts.forEach(p => printToTerminal(`    PORT ${p}    OPEN    service detected`, 'default'));
+                    printToTerminal(`[+] ${openPorts.length} open ports found. Vulnerabilities: ${Math.floor(Math.random() * 4)} high risk.`, 'warning');
+                    addSyslog(`SCAN: ${currentTarget.ip} exposed ${openPorts.length} ports.`);
+                }, 300);
+            },
+            exploit: () => {
+                if (currentTarget.status === 'ok') {
+                    printToTerminal(`> TARGET ${currentTarget.ip} appears hardened. No known exploits.`, 'error');
+                    return;
+                }
+                const exploitChain = ['CVE-2023-38831', 'CVE-2021-44228 (Log4Shell)', 'EternalRomance', 'CVE-2019-0708 BlueKeep', 'PrintNightmare'];
+                const exploitName = exploitChain[Math.floor(Math.random() * exploitChain.length)];
+                printToTerminal(`> Loading exploit module: ${exploitName}`, 'cyan');
+                showHackSequence(`💀 EXPLOIT: ${currentTarget.ip}`, [
+                    'Bypassing ASLR...', 'Spraying heap...', 'ROP chain injection', 'Privilege Escalation',
+                    'Disabling SELinux', 'Installing persistence', 'Pwning session...', 'Root access granted'
+                ], () => {
+                    printToTerminal(`✅ [SUCCESS] Remote shell established: ${currentTarget.ip} : ROOT`, 'success');
+                    printToTerminal(`> Session hash: 0x${Math.random().toString(16).slice(2, 10)}`, 'cyan');
+                    currentTarget.status = 'pwned';
+                    updatePayloadStats(1);
+                    addSyslog(`EXPLOIT: ${currentTarget.ip} compromised via ${exploitName}`);
+                    renderTargets();
+                });
+            },
+            inject: () => {
+                printToTerminal(`> Generating polymorphic payload for ${currentTarget.ip}`, 'cyan');
+                showHackSequence('PAYLOAD INJECTION', ['Encoding shellcode', 'AV evasion', 'Meterpreter reverse tcp', 'Callback established', 'Deploying rootkit'], () => {
+                    printToTerminal(`✔ Backdoor deployed to /dev/shm/.systemd-${Math.floor(Math.random() * 999)}`, 'success');
+                    addSyslog(`INJECT: payload delivered to ${currentTarget.ip}`);
+                    updatePayloadStats(1);
+                });
+            },
+            crack: () => {
+                printToTerminal(`>> Brute-force hashdump on ${currentTarget.ip}`, 'warning');
+                showHackSequence('CRACKING CREDENTIALS', ['Loading rainbow tables', 'NTLM hash extraction', 'Dictionary attack', 'Markov chains active', 'Password recovered!'], () => {
+                    const creds = `admin:${Math.random().toString(36).slice(2, 8)}!@# / root:toor2024`;
+                    printToTerminal(`🔥 CREDENTIALS: ${creds}`, 'warning');
+                    addSyslog(`CRACK: credentials extracted from ${currentTarget.ip}`);
+                });
+            },
+            wipe: () => {
+                printToTerminal(`> Invoking secure wipe of event logs & remote traces...`, 'warning');
+                setTimeout(() => {
+                    printToTerminal(`[✓] Local logs flushed. Remote logs wiped on ${currentTarget.ip}`, 'success');
+                    addSyslog(`WIPE: forensic traces eliminated from ${currentTarget.ip}`);
+                }, 800);
+            },
+            matrix: () => {
+                matrixActive = !matrixActive;
+                if (matrixActive) {
+                    matrixCanvas.classList.add('matrix-visible');
+                    drawMatrixRain();
+                    printToTerminal('> Matrix Rain : ACTIVATED', 'cyan');
+                } else {
+                    matrixCanvas.classList.remove('matrix-visible');
+                    printToTerminal('> Matrix Rain : DEACTIVATED', 'default');
+                }
+            },
+            status: () => {
+                printToTerminal(`\n=== CURRENT SESSION STATUS ===`, 'cyan');
+                printToTerminal(`Target        : ${currentTarget.ip} (${currentTarget.label})`, 'success');
+                printToTerminal(`Exploits used : ${exploitsDeployed}/71`, 'default');
+                printToTerminal(`CPU overhead   : ${document.getElementById('cpuStat').innerText}`, 'default');
+                printToTerminal(`Firewall mode  : STEALTH`, 'default');
+                printToTerminal(`Active Proxy   : ${document.getElementById('dynamicProxy').innerText}\n`, 'default');
+            },
+            clear: () => { termOutput.innerHTML = ''; printToTerminal('> Terminal cleared.', 'cyan'); }
+        };
+
+        termInput.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (histPointer < cmdHistory.length - 1) histPointer++;
+                termInput.value = cmdHistory[histPointer] || '';
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (histPointer > 0) histPointer--;
+                termInput.value = cmdHistory[histPointer] || '';
+            } else if (e.key === 'Enter') {
+                const rawCmd = termInput.value.trim();
+                if (rawCmd === "") return;
+                printToTerminal(`root@neuron:~# ${rawCmd}`, 'cyan');
+                cmdHistory.unshift(rawCmd);
+                histPointer = -1;
+                const cmdKey = rawCmd.split(' ')[0].toLowerCase();
+                if (commandActions[cmdKey]) commandActions[cmdKey]();
+                else printToTerminal(`error: unknown command '${cmdKey}'. use 'help'`, 'error');
+                termInput.value = '';
+            }
+        });
+
+        // SYSTEM STATS SIMULATION (ENHANCED)
+        let cpuLoad = 18, ramLoad = 1800, payloadSteps = 0;
+        setInterval(() => {
+            cpuLoad += (Math.random() - 0.5) * 13;
+            cpuLoad = Math.min(94, Math.max(4, cpuLoad));
+            document.getElementById('cpuStat').innerText = Math.floor(cpuLoad) + '%';
+            document.getElementById('cpuFill').style.width = cpuLoad + '%';
+            if (cpuLoad > 75) document.getElementById('cpuFill').style.background = '#ff4444';
+            else document.getElementById('cpuFill').style.background = '#0f0';
+
+            ramLoad += (Math.random() - 0.5) * 210;
+            ramLoad = Math.min(14700, Math.max(800, ramLoad));
+            document.getElementById('ramStat').innerText = Math.floor(ramLoad) + ' MB / 16384 MB';
+            document.getElementById('ramFill').style.width = (ramLoad / 16384 * 100) + '%';
+
+            let upTraffic = Math.floor(Math.random() * 18000);
+            let downTraffic = Math.floor(Math.random() * 24000);
+            document.getElementById('netStat').innerHTML = `↑${upTraffic} kb/s ↓${downTraffic} kb/s`;
+
+            const proxyList = ['185.220.101.5', '146.70.46.8', '45.147.200.22', '193.46.255.90', '185.165.29.111'];
+            if (Math.random() > 0.98) {
+                document.getElementById('dynamicProxy').innerText = proxyList[Math.floor(Math.random() * proxyList.length)];
+            }
+        }, 1100);
+
+        setInterval(() => {
+            const logsBank = ['[IDS] signature update', '[TOR] new circuit', '[CRYPTO] AES256 key rotated', '[KERN] netfilter hook installed', '[FIREWALL] bypass active'];
+            if (Math.random() > 0.85) addSyslogEvent(logsBank[Math.floor(Math.random() * logsBank.length)]);
+        }, 5900);
+
+        printToTerminal(" ⚡ GHOST PROTOCOL v7.2 — ENHANCED CYBER INTERFACE ⚡", 'cyan');
+        printToTerminal(" ════════════════════════════════════════════════", 'success');
+        printToTerminal(" ⚠  FOR SIMULATION & ETHICAL RESEARCH ONLY.", 'warning');
+        printToTerminal(" Type 'help' to initialize command matrix.\n", 'default');
+        setTimeout(() => addSyslogEvent("Neuron_ghost active | TOR Circuits: 3"), 500);
+
+        document.addEventListener('click', () => termInput.focus());
+    </script>
+</body>
+
+</html>
+```
