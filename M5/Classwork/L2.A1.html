@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <Body>
+        <h2>Classwork: L2.A1</h2>
+        <p>Welcome to the classwork for Lesson 2, Activity 1. In
+        <p id="student1"></p>
+        <p id="student2"></p>
+        <script>
+            class student{
+                constructor(name, year) {
+                    this.name = name;
+                    this.year = year;
+                    
+                }
+                age() {
+                    let date = new Date();
+                    return date.getFullYear() - this.year;
+                }
+            }
+            studentObj1 = new student("Alice", 20);
+            document.getElementById("student1").innerHTML = "my name is " + studentObj1.name + ", I am " + studentObj1.year + " years old." + studentObj1.age() ;
+             
+            
+
+            studentObj2 = new student("Bob", 10);
+            document.getElementById("student2").innerHTML = "my name is " + studentObj2.name + ", I am " + studentObj2.year + " years old." + studentObj2.age() ;
+        </script>
+    </Body>
+</html>

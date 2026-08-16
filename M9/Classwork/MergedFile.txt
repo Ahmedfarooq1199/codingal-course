@@ -1,0 +1,6 @@
+file in write mode ....Hi! I am penguin. I am 1 year old.
+file in append mode ....hi! I am panda. I am 2 years old.
+ Hi! I am a koala. I am 3 years old.
+file in write mode ....Hi! I am penguin. I am 1 year old.
+file in append mode ....hi! I am panda. I am 2 years old.
+ Hi! I am a koala. I am 3 years old.

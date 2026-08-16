@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pakistani-Chinese</title>
+</head>
+<body>
+  <h1>welcome to Iran</h1>
+  <p id="output"></p>
+
+  <script>
+    // Define a class
+    class Person {
+      constructor(name, age) {
+        this.name = name;
+        this.age = age;
+      }
+
+      // Method inside the class
+      greet() {
+        return `Hello, my name is ${this.name} and I am ${this.age} years old.`;
+      }
+    }
+
+    // Create an object from the class
+    const person1 = new Person("Ahmed", 25);
+
+    // Display output in the HTML
+    document.getElementById("output").innerText = person1.greet();
+  </script>
+</body>
+</html>

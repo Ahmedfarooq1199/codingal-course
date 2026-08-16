@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+
+<body>
+
+    <p>Welcome to the classwork assignment for Lesson 3, Activity 2.</p>
+    <button onclick="myfunction()">Try it!</button>
+    <p id="result"></p>
+    <script>
+        function myfunction() {
+            var x = 10;
+            var y = 20;
+            var a = eval("x + y") + "<br>";
+            var b = eval("2 * 2") + "<br>";
+            var c = eval("y - x") + "<br>";
+
+            var res = a + b + c;
+            document.getElementById("result").innerHTML = res;
+        }
+    </script>
+</body>
+</html>

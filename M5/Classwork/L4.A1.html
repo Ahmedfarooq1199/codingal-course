@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h2>Classwork: L4.A1</h2>
+    <p>Welcome to the classwork assignment for Lesson 4, Activity 1.</p>
+    <p id="search_result"></p>
+    <p id="replace_result"></p>
+    <p id="string_result"></p>
+    <script>
+        var str = "Hello, how are you";
+        var search_position =str.search("you");
+        var txt = str.replace("Hello", "Hi");
+
+        document.getElementById("search_result").innerHTML = search_position;
+        document.getElementById("replace_result").innerHTML = txt;
+
+        var x = 80;
+        var y = 20;
+        document.getElementById("string_result").innerHTML = String(x) + String(y);
+    </script>
+</body>
+</html>

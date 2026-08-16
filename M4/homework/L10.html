@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to codingal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+      color: #222;
+    }
+    h1 {
+      color: #007BFF;
+    }
+    h2 {
+      margin-top: 30px;
+      color: #333;
+    }
+    pre {
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .output {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #006400;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌟Pakistan Zindabad 🌟</h1>
+  
+
+  <!-- Arrays Section -->
+  <h2>🔹 What is an Array?</h2>
+  <p>An <strong>array</strong> is a list of items stored in a single variable.</p>
+  <p>For example:</p>
+
+  <pre>
+let colors = ["Red", "Green", "Blue"];
+console.log(colors[0]);  // shows "Red"
+  </pre>
+
+  <button onclick="showArray()">Try Array Example</button>
+  <div class="output" id="arrayResult"></div>
+
+  <!-- Call Stack Section -->
+  <h2>🔹 What is the Call Stack?</h2>
+  <p>The <strong>call stack</strong> keeps track of which function is running in JavaScript.</p>
+  <p>Let’s see how it works:</p>
+
+  <pre>
+function greet() {
+  sayHello();
+}
+
+function sayHello() {
+  showMessage();
+}
+
+function showMessage() {
+  console.log("Hello, 🌟Pakistan!");
+}
+
+greet();
+  </pre>
+
+  <button onclick="showCallStack()">Try Call Stack Example</button>
+  <div class="output" id="stackResult"></div>
+
+  <!-- JavaScript -->
+  <script>
+    function showArray() {
+      let colors = ["Red", "Green", "Blue"];
+      document.getElementById("arrayResult").innerText = 
+        "The first color is: " + colors[0];
+    }
+
+    function showCallStack() {
+      function greet() {
+        sayHello();
+      }
+
+      function sayHello() {
+        showMessage();
+      }
+
+      function showMessage() {
+        document.getElementById("stackResult").innerText = 
+          "Hello, beginner! (From the call stack)";
+      }
+
+      greet();
+    }
+  </script>
+
+</body>
+</html>

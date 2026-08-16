@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ahmed farooq</title>
+  <style>
+    body {
+      font-family: Arial;
+      margin: 30px;
+    }
+    button {
+      margin: 5px 10px 10px 0;
+      padding: 10px;
+    }
+    #output {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Pakistan zindabad</h2>
+
+  <p><strong>Original Array:</strong> [12, 5, 8, 1, 23]</p>
+
+  <button onclick="sortArray()">Sort Array</button>
+  <button onclick="mapArray()">Multiply Each by 2</button>
+  <button onclick="resetArray()">Reset Array</button>
+
+  <div id="output"></div>
+
+  <script>
+    let numbers = [12, 5, 8, 1, 23];
+    let original = [...numbers]; // save original
+
+    function displayArray(title, array) {
+      document.getElementById("output").innerText = title + ": [" + array.join(", ") + "]";
+    }
+
+    function sortArray() {
+      const sorted = [...numbers].sort((a, b) => a - b);
+      displayArray("Sorted Array", sorted);
+    }
+
+    function mapArray() {
+      const mapped = numbers.map(num => num * 2);
+      displayArray("Mapped Array (×2)", mapped);
+    }
+
+    function resetArray() {
+      numbers = [...original];
+      displayArray("Original Array Restored", numbers);
+    }
+  </script>
+
+</body>
+</html>

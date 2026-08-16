@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h2>Classwork: L4.A1</h2>
+        <p>In this classwork, you will practice using the for</p>
+<p> loop to iterate through a list of numbers and print each number.</p>
+<p id="demo"></p>
+<script>
+    var person = {
+        firstName: "John",
+        age: 30,
+        city: "New York",
+        school: "Punjab High School",
+        grade: "10th",
+        subjects: ["Math", "Science", "English"]
+       
+    };
+    document.getElementById("demo").innerHTML = "My name is " + person.firstName + ". I am " + person.age + " years old." +
+        " I live in " + person.city + ". I study at " + person.school + 
+        " in grade " + person.grade + ". My favorite subjects are."+ person["subjects"].join(", ") + ".";
+</script>
+    </body>
+</html>

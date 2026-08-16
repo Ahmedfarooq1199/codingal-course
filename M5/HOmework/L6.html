@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JavaScript Error Handling</title>
+  <style>
+    body {
+      font-family: Arial;
+      margin: 30px;
+    }
+    #error {
+      color: red;
+      margin-top: 10px;
+    }
+    #result {
+      color: green;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Ahmed Farooq</h2>
+
+  <input type="text" id="numberInput" placeholder="Enter a number">
+  <button onclick="calculateSquare()">Calculate</button>
+
+  <div id="result"></div>
+  <div id="error"></div>
+
+  <script>
+    function calculateSquare() {
+      const input = document.getElementById("numberInput").value;
+      const resultDiv = document.getElementById("result");
+      const errorDiv = document.getElementById("error");
+
+      resultDiv.innerText = "";
+      errorDiv.innerText = "";
+
+      try {
+        // Convert input to number
+        const num = Number(input);
+
+        // Check for invalid number
+        if (isNaN(num)) {
+          throw new Error("Invalid input. Please enter a number.");
+        }
+
+        // Calculate square
+        const square = num * num;
+        resultDiv.innerText = "Square: " + square;
+      } catch (error) {
+        errorDiv.innerText = "Error: " + error.message;
+      }
+    }
+  </script>
+
+</body>
+</html>

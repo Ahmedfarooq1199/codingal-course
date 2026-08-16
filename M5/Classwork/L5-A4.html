@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h2>javscript callback</h2>
+        <p>Do a calculation</p>
+        <p id="result"></p>
+        <script>
+            function myDisplayer(some) {
+                document.getElementById("result").innerHTML = some;
+            }
+            function myCalculator(num1, num2, myCallback) {
+                let sum = num1 + num2;
+                myCallback(sum);
+            }
+            myCalculator(5, 10, myDisplayer);
+        </script>
+    </body>
+</html>

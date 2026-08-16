@@ -1,0 +1,2 @@
+file in write mode ....Hi! I am penguin. I am 1 year old.
+ Hi! I am a koala. I am 3 years old.
