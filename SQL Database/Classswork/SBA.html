@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Score Bridge Academy — Math &amp; Physics with Mehroz Akram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14213D; --navy-soft:#1E2E52;
+    --cream:#FAF8F2; --paper:#FFFFFF;
+    --amber:#F2A93B; --amber-soft:#FCE7C2;
+    --teal:#1FA8A0; --teal-soft:#D8F0EE;
+    --coral:#EF6C56; --coral-soft:#FBDFD8;
+    --ink:#1B2333; --muted:#5B6478;
+    --line:#E7E2D6;
+    --radius:18px; --shadow:0 10px 28px rgba(20,33,61,0.10);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{font-family:'Poppins',sans-serif;margin:0 0 .4em 0;color:var(--navy);font-weight:700;letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;} img,svg,iframe{display:block;max-width:100%;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  .eyebrow{font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;color:var(--coral);font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--coral);display:inline-block;}
+
+  /* ---------- Nav ---------- */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(250,248,242,0.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;max-width:1180px;margin:0 auto;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.2rem;color:var(--navy);}
+  .logo .mark{width:38px;height:38px;flex:none;}
+  .logo small{display:block;font-family:'Inter';font-weight:600;font-size:.62rem;color:var(--coral);letter-spacing:.08em;text-transform:uppercase;}
+  nav.links{display:flex;gap:26px;font-weight:600;font-size:.92rem;}
+  nav.links a{text-decoration:none;color:var(--navy);opacity:.7;transition:opacity .2s;cursor:pointer;}
+  nav.links a:hover{opacity:1;}
+  .nav-cta{background:#FF0000;color:#fff;padding:10px 18px;border-radius:100px;text-decoration:none;font-weight:700;font-size:.86rem;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:8px;}
+  .nav-cta svg{width:16px;height:16px;}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:60px 0 30px;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center;}
+  .hero h1{font-size:clamp(2.1rem,3.6vw,3.1rem);line-height:1.12;}
+  .hero .accent{color:var(--coral);}
+  .hero p.lead{font-size:1.08rem;max-width:46ch;color:var(--muted);margin-bottom:26px;}
+  .hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:30px;}
+  .btn-primary{background:var(--navy);color:#fff;padding:14px 26px;border-radius:100px;text-decoration:none;font-weight:700;box-shadow:var(--shadow);border:none;cursor:pointer;font-size:.98rem;transition:transform .15s ease;display:inline-flex;align-items:center;gap:8px;}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-secondary{background:#FF0000;color:#fff;padding:14px 22px;border-radius:100px;text-decoration:none;font-weight:700;border:none;font-size:.98rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
+  .btn-secondary svg{width:18px;height:18px;}
+  .chip-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{background:var(--paper);border:1px solid var(--line);padding:8px 16px;border-radius:100px;font-size:.82rem;font-weight:600;color:var(--navy);box-shadow:var(--shadow);}
+  .chip.amber{background:var(--amber-soft);border-color:transparent;}
+  .chip.teal{background:var(--teal-soft);border-color:transparent;}
+
+  .hero-art{position:relative;}
+  .hero-art svg{width:100%;height:auto;}
+
+  section{padding:64px 0;}
+  .section-head{max-width:640px;margin-bottom:38px;}
+  .section-head h2{font-size:clamp(1.6rem,2.8vw,2.2rem);}
+  .section-head p{color:var(--muted);font-size:1.02rem;}
+
+  /* ---------- About ---------- */
+  .about-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:46px;align-items:center;}
+  .about-card{background:var(--navy);border-radius:24px;padding:36px;color:#fff;position:relative;overflow:hidden;}
+  .about-card::before{content:"";position:absolute;width:220px;height:220px;background:var(--amber);opacity:.15;border-radius:50%;top:-80px;right:-80px;}
+  .avatar-ring{width:96px;height:96px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Poppins';font-weight:800;font-size:2rem;color:var(--navy);margin-bottom:20px;position:relative;z-index:1;}
+  .about-card h3{color:#fff;font-size:1.35rem;position:relative;z-index:1;}
+  .about-card .role{color:var(--amber);font-weight:600;font-size:.85rem;margin-bottom:16px;position:relative;z-index:1;}
+  .about-card .contact-line{display:flex;align-items:center;gap:10px;font-size:.86rem;color:#D9DEEA;margin-top:10px;position:relative;z-index:1;}
+  .about-card .contact-line svg{width:16px;height:16px;flex:none;color:var(--amber);}
+  .about-text p{color:var(--muted);font-size:1.02rem;margin-bottom:16px;}
+  .about-text ul{padding-left:0;list-style:none;margin:22px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .about-text li{display:flex;align-items:center;gap:10px;font-size:.9rem;font-weight:600;color:var(--navy);}
+  .about-text li svg{width:18px;height:18px;color:var(--teal);flex:none;}
+
+  /* ---------- Subjects ---------- */
+  .subject-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .subject-card{background:var(--paper);border-radius:16px;padding:26px 22px;border:1px solid var(--line);box-shadow:var(--shadow);}
+  .subject-card .badge{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .subject-card.math9 .badge{background:var(--teal-soft);}
+  .subject-card.phy9 .badge{background:var(--amber-soft);}
+  .subject-card.math11 .badge{background:var(--coral-soft);}
+  .subject-card.phy11 .badge{background:var(--teal-soft);}
+  .subject-card h4{font-size:1.05rem;margin-bottom:6px;}
+  .subject-card p{font-size:.86rem;color:var(--muted);margin:0;}
+
+  /* ---------- Features ---------- */
+  .features{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .feature{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--shadow);}
+  .feature .num{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--coral);font-weight:700;margin-bottom:10px;}
+  .feature h4{font-size:1.02rem;margin-bottom:6px;} .feature p{font-size:.86rem;color:var(--muted);margin:0;}
+
+  /* ---------- Videos ---------- */
+  .video-section{background:var(--navy);border-radius:28px;padding:48px;color:#fff;}
+  .video-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:28px;}
+  .video-head h2{color:#fff;}
+  .video-head p{color:#B9C1D6;margin:0;max-width:44ch;}
+  .video-frame{border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.35);background:#000;}
+  .video-frame iframe{width:100%;height:600px;border:0;display:block;}
+  .subscribe-row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:26px;padding-top:26px;border-top:1px solid rgba(255,255,255,.12);}
+  .subscribe-row .txt{color:#B9C1D6;font-size:.92rem;}
+  .subscribe-row .txt b{color:#fff;}
+  #subscribe-embed{background:#fff;border-radius:10px;overflow:hidden;}
+  #subscribe-embed iframe{height:56px;width:260px;border:0;}
+
+  @media (max-width:700px){ .video-frame iframe{height:340px;} }
+
+  /* ---------- CTA banner ---------- */
+  .cta-banner{background:var(--amber);border-radius:24px;padding:44px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;}
+  .cta-banner h3{margin-bottom:6px;} .cta-banner p{margin:0;color:#5B4B22;}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--navy);color:#fff;padding:56px 0 26px;margin-top:40px;}
+  .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:36px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.14);}
+  footer h4{color:var(--amber);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;font-family:'Inter';}
+  footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:.92rem;color:#C7CEDF;}
+  footer .logo{color:#fff;}
+  footer p.tag{color:#9AA3BC;font-size:.9rem;max-width:34ch;margin-top:10px;}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;flex-wrap:wrap;gap:10px;font-size:.82rem;color:#9AA3BC;}
+  .foot-bottom .powered{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--amber);}
+  .foot-bottom .powered svg{width:16px;height:16px;}
+
+  @media (max-width:880px){
+    nav.links{display:none;}
+    .hero-grid{grid-template-columns:1fr;}
+    .about-grid{grid-template-columns:1fr;}
+    .about-text ul{grid-template-columns:1fr;}
+    .subject-grid{grid-template-columns:1fr 1fr;}
+    .features{grid-template-columns:1fr 1fr;}
+    .foot-grid{grid-template-columns:1fr;}
+    .video-section{padding:26px;}
+    .cta-banner{flex-direction:column;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <svg class="mark" viewBox="0 0 44 44" fill="none">
+        <rect width="44" height="44" rx="12" fill="#14213D"/>
+        <path d="M12 30V16l10-4 10 4v14" stroke="#F2A93B" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M12 16l10 4 10-4" stroke="#F2A93B" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="22" cy="24" r="2" fill="#1FA8A0"/>
+      </svg>
+      <div>Score Bridge Academy<small>Math &amp; Physics · 9th–12th</small></div>
+    </div>
+    <nav class="links">
+      <a onclick="scrollToId('about')">About</a>
+      <a onclick="scrollToId('subjects')">Subjects</a>
+      <a onclick="scrollToId('videos')">Videos</a>
+      <a onclick="scrollToId('contact')">Contact</a>
+    </nav>
+    <a class="nav-cta" href="https://youtube.com/@scorebridgeacademy?si=UAqWpb0HOL9xvgK3" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg>
+      Subscribe
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Learn on YouTube · Free Lessons</div>
+      <h1>Bridging the gap between <span class="accent">confusion and confidence.</span></h1>
+      <p class="lead">Score Bridge Academy is where Mehroz Akram teaches Math &amp; Physics for classes 9–12 — concept-based lessons, board exam prep, past papers and MCQs, built to help you actually understand the subject, not just memorize it.</p>
+      <div class="hero-btns">
+        <a class="btn-secondary" href="https://youtube.com/@scorebridgeacademy?si=UAqWpb0HOL9xvgK3" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg>
+          Watch on YouTube
+        </a>
+        <button class="btn-primary" onclick="scrollToId('videos')">Browse Lessons ↓</button>
+      </div>
+      <div class="chip-row">
+        <span class="chip amber">Concept-Based Learning</span>
+        <span class="chip teal">Board Exam Prep</span>
+        <span class="chip">Past Papers &amp; MCQs</span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 560 460" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="280" cy="420" rx="220" ry="20" fill="#EFE9DA"/>
+        <rect x="70" y="60" width="420" height="300" rx="18" fill="#14213D"/>
+        <rect x="94" y="84" width="372" height="252" rx="8" fill="#1E2E52"/>
+        <path d="M120 300 Q 180 200 240 260 T 360 220 T 440 160" stroke="#F2A93B" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle cx="120" cy="300" r="5" fill="#F2A93B"/><circle cx="240" cy="260" r="5" fill="#F2A93B"/><circle cx="360" cy="220" r="5" fill="#F2A93B"/><circle cx="440" cy="160" r="5" fill="#F2A93B"/>
+        <text x="130" y="130" font-family="monospace" font-size="26" fill="#1FA8A0">E=mc²</text>
+        <text x="290" y="150" font-family="monospace" font-size="22" fill="#EF6C56">x²+y²</text>
+        <circle cx="380" cy="270" r="26" fill="none" stroke="#F2A93B" stroke-width="2"/>
+        <circle cx="380" cy="270" r="4" fill="#F2A93B"/>
+        <ellipse cx="380" cy="270" rx="26" ry="10" fill="none" stroke="#1FA8A0" stroke-width="1.6" transform="rotate(30 380 270)"/>
+        <ellipse cx="380" cy="270" rx="26" ry="10" fill="none" stroke="#1FA8A0" stroke-width="1.6" transform="rotate(-30 380 270)"/>
+        <circle cx="406" cy="255" r="3.5" fill="#1FA8A0"/>
+        <!-- graduation cap -->
+        <g transform="translate(370,20)">
+          <polygon points="40,0 80,16 40,32 0,16" fill="#F2A93B"/>
+          <rect x="34" y="18" width="12" height="16" fill="#1FA8A0"/>
+          <line x1="80" y1="16" x2="80" y2="36" stroke="#EF6C56" stroke-width="2"/>
+          <circle cx="80" cy="40" r="3" fill="#EF6C56"/>
+        </g>
+        <!-- book -->
+        <g transform="translate(10,180)">
+          <rect x="0" y="0" width="70" height="90" rx="6" fill="#EF6C56"/>
+          <rect x="8" y="10" width="54" height="6" rx="2" fill="#fff" opacity=".8"/>
+          <rect x="8" y="24" width="54" height="6" rx="2" fill="#fff" opacity=".6"/>
+          <rect x="8" y="38" width="34" height="6" rx="2" fill="#fff" opacity=".6"/>
+        </g>
+        <!-- pencil -->
+        <g transform="translate(440,320) rotate(-30)">
+          <rect x="0" y="0" width="90" height="16" rx="4" fill="#F2A93B"/>
+          <polygon points="90,0 110,8 90,16" fill="#FCE7C2"/>
+          <rect x="0" y="0" width="14" height="16" fill="#14213D"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="about-card">
+      <div class="avatar-ring">MA</div>
+      <h3>Mehroz Akram</h3>
+      <div class="role">Founder &amp; Educator, Score Bridge Academy</div>
+      <div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.5 2.1L8 9.7a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.9.3 1.8.5 2.7.6a2 2 0 011.8 2z"/></svg>+92 314-7634118</div>
+      <div class="contact-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>scorebridgeacademy@gmail.com</div>
+    </div>
+    <div class="about-text">
+      <div class="eyebrow">About the Academy</div>
+      <h2>Making Math &amp; Physics finally make sense.</h2>
+      <p>Mehroz Akram is a Mathematics &amp; Physics educator focused on helping students build real, lasting understanding — not just get through the next test. Score Bridge Academy grew out of a simple idea: every student can score higher once the concept actually clicks.</p>
+      <p>The channel covers classes 9th, 10th, 11th and 12th, with lessons built around board exam preparation, past papers, MCQs, important questions, and the kind of exam strategy that only comes from years of teaching.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Concept-based lessons</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Board exam preparation</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Past papers &amp; MCQs</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Smart exam strategies</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="subjects">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What's Covered</div>
+      <h2>One channel, four grade levels.</h2>
+      <p>Lessons are organized by class and subject, so you can go straight to what you're studying right now.</p>
+    </div>
+    <div class="subject-grid">
+      <div class="subject-card math9">
+        <div class="badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1FA8A0" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6M9 15h6M12 9v6"/></svg></div>
+        <h4>Math — 9th &amp; 10th</h4>
+        <p>Foundational concepts, worked examples, and matric board exam prep.</p>
+      </div>
+      <div class="subject-card phy9">
+        <div class="badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B5651D" stroke-width="2"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="4"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(60 12 12)"/></svg></div>
+        <h4>Physics — 9th &amp; 10th</h4>
+        <p>Core physics concepts explained simply, with real problem-solving practice.</p>
+      </div>
+      <div class="subject-card math11">
+        <div class="badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF6C56" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/></svg></div>
+        <h4>Math — 11th &amp; 12th</h4>
+        <p>Intermediate-level math with FSC board exam strategy and past papers.</p>
+      </div>
+      <div class="subject-card phy11">
+        <div class="badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1FA8A0" stroke-width="2"><path d="M12 2v20M2 12h20" stroke-dasharray="2 3"/><circle cx="12" cy="12" r="4"/></svg></div>
+        <h4>Physics — 11th &amp; 12th</h4>
+        <p>Advanced physics topics broken into clear, exam-focused lessons.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Why Students Stay</div>
+      <h2>Built for board exams, not just curiosity.</h2>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="num">01</div><h4>Concept First</h4><p>Every topic is broken down until it genuinely makes sense — not just formulas to memorize.</p></div>
+      <div class="feature"><div class="num">02</div><h4>Board-Focused</h4><p>Lessons are mapped to what actually shows up in board exams, so study time counts.</p></div>
+      <div class="feature"><div class="num">03</div><h4>Past Papers &amp; MCQs</h4><p>Practice with real past paper questions and MCQ drills after every topic.</p></div>
+      <div class="feature"><div class="num">04</div><h4>Exam Strategy</h4><p>Time management and smart-attempt strategies to help marks match preparation.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="videos">
+  <div class="wrap">
+    <div class="video-section">
+      <div class="video-head">
+        <div>
+          <div class="eyebrow" style="color:var(--amber);">Latest Lessons</div>
+          <h2>Straight from the channel.</h2>
+        </div>
+        <p>This player pulls live from the Score Bridge Academy YouTube channel — browse the playlist icon in the top-left corner of the player to jump between lessons.</p>
+      </div>
+      <div class="video-frame">
+        <iframe src="https://www.youtube.com/embed/videoseries?list=UUjmUPa4stZoo1ZXHrac5sUQ" title="Score Bridge Academy videos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="subscribe-row">
+        <div class="txt">Get new lessons as soon as they're posted — <b>subscribe to Score Bridge Academy</b>.</div>
+        <div id="subscribe-embed">
+          <iframe src="https://www.youtube.com/subscribe_embed?channelid=UCjmUPa4stZoo1ZXHrac5sUQ" title="Subscribe"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap">
+    <div class="cta-banner">
+      <div>
+        <h3>Ready to raise your score?</h3>
+        <p>New Math &amp; Physics lessons posted regularly for classes 9th–12th.</p>
+      </div>
+      <a class="btn-primary" href="https://youtube.com/@scorebridgeacademy?si=UAqWpb0HOL9xvgK3" target="_blank" rel="noopener">Visit the Channel →</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo">
+          <svg class="mark" viewBox="0 0 44 44" fill="none" style="width:32px;height:32px;"><rect width="44" height="44" rx="12" fill="#F2A93B"/><path d="M12 30V16l10-4 10 4v14" stroke="#14213D" stroke-width="2" stroke-linejoin="round"/><path d="M12 16l10 4 10-4" stroke="#14213D" stroke-width="2" stroke-linejoin="round"/></svg>
+          Score Bridge Academy
+        </div>
+        <p class="tag">Math &amp; Physics lessons for classes 9th–12th, taught by Mehroz Akram — free on YouTube.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a onclick="scrollToId('about')">About</a></li>
+          <li><a onclick="scrollToId('subjects')">Subjects</a></li>
+          <li><a onclick="scrollToId('videos')">Videos</a></li>
+          <li><a href="https://youtube.com/@scorebridgeacademy?si=UAqWpb0HOL9xvgK3" target="_blank" rel="noopener">YouTube Channel</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>+92 314-7634118</li>
+          <li>scorebridgeacademy@gmail.com</li>
+          <li>@ScoreBridgeAcademy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Score Bridge Academy. All rights reserved.</span>
+      <span class="powered"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#F2A93B" stroke-width="2"/><path d="M6 10.5l2.5 2.5L14 7.5" stroke="#F2A93B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Powered by Doodle Dash</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function scrollToId(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+</script>
+
+</body>
+</html>

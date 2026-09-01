@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FarmGhar Admin — Farm Control Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF3E2; --paper:#FFFDF8; --ink:#23301E;
+    --green-deep:#2C4A34; --green-mid:#3E6B4C;
+    --gold:#D9A441; --gold-soft:#F1D9A0; --rust:#B5651D;
+    --sky:#6F9FA8; --sky-soft:#DCEAEC; --line:#D8CBA9;
+    --radius:16px; --shadow:0 8px 24px rgba(44,74,52,0.10);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.5;}
+  h1,h2,h3,h4{font-family:'Fraunces',serif;margin:0 0 .3em 0;color:var(--green-deep);font-weight:700;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- Shell layout ---------- */
+  .shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh;}
+  .sidebar{
+    background:var(--green-deep);color:var(--cream);padding:26px 20px;
+    display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;
+  }
+  .side-logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:1.15rem;color:var(--cream);margin-bottom:26px;}
+  .side-logo .tag{display:block;font-family:'Work Sans';font-size:.68rem;color:var(--gold-soft);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+  .side-link{
+    display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:#D9E2D2;
+    text-decoration:none;font-size:.92rem;font-weight:500;cursor:pointer;border:none;background:none;width:100%;text-align:left;
+    font-family:'Work Sans';
+  }
+  .side-link svg{width:18px;height:18px;flex:none;opacity:.85;}
+  .side-link:hover{background:rgba(250,243,226,.08);}
+  .side-link.active{background:var(--gold);color:var(--green-deep);font-weight:700;}
+  .side-link.active svg{opacity:1;}
+  .side-bottom{margin-top:auto;border-top:1px solid rgba(250,243,226,.15);padding-top:16px;}
+  .back-site{color:var(--gold-soft);font-size:.82rem;text-decoration:none;display:flex;align-items:center;gap:8px;font-weight:600;}
+
+  .main{padding:32px 40px 60px;}
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+  .topbar p{color:#586252;margin:4px 0 0;}
+  .admin-chip{display:flex;align-items:center;gap:10px;background:var(--paper);padding:8px 16px 8px 8px;border-radius:100px;border:1px solid var(--line);box-shadow:var(--shadow);}
+  .admin-chip .av{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--green-deep);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;}
+  .admin-chip span{font-size:.85rem;font-weight:600;color:var(--green-deep);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ---------- Stat cards ---------- */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:30px;}
+  .stat-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+  .stat-card .label{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:#7a8271;font-weight:600;margin-bottom:8px;}
+  .stat-card .value{font-family:'Fraunces',serif;font-size:1.7rem;color:var(--green-deep);}
+  .stat-card .delta{font-size:.78rem;color:var(--green-mid);font-weight:600;margin-top:4px;}
+
+  .banner{
+    border-radius:20px;overflow:hidden;position:relative;height:190px;margin-bottom:30px;
+    display:flex;align-items:flex-end;
+  }
+  .banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .banner::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(35,48,30,.75),rgba(35,48,30,.05));}
+  .banner-text{position:relative;z-index:1;padding:22px 26px;color:var(--cream);}
+  .banner-text h3{color:var(--cream);font-size:1.3rem;}
+  .banner-text p{margin:2px 0 0;color:#E7E2D2;font-size:.9rem;}
+
+  /* ---------- Panels / tables ---------- */
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:26px;}
+  .panel-head{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:12px;}
+  .panel-head h3{font-size:1.05rem;}
+  table{width:100%;border-collapse:collapse;}
+  thead th{text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#7a8271;padding:12px 24px;border-bottom:1px solid var(--line);}
+  tbody td{padding:13px 24px;border-bottom:1px solid var(--line);font-size:.9rem;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#FBF6E9;}
+  .row-name{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--green-deep);}
+  .thumb{width:34px;height:34px;border-radius:8px;object-fit:cover;flex:none;}
+  .tag{padding:4px 10px;border-radius:100px;font-size:.72rem;font-weight:700;text-transform:capitalize;}
+  .tag.cattle{background:var(--sky-soft);color:#2F5E66;}
+  .tag.goat{background:var(--gold-soft);color:var(--rust);}
+  .tag.poultry{background:#F3E1DA;color:#A6432E;}
+  .icon-btn{background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;color:#8a927e;}
+  .icon-btn:hover{background:#F1E9D3;color:#C25A45;}
+  .icon-btn svg{width:16px;height:16px;}
+
+  /* ---------- Form ---------- */
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;padding:20px 24px;background:#FBF6E9;border-bottom:1px solid var(--line);}
+  .field label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#7a8271;margin-bottom:6px;}
+  select, input[type=text], input[type=number]{
+    width:100%;padding:9px 11px;border-radius:8px;border:1.5px solid var(--line);background:var(--paper);
+    font-family:'Work Sans';font-size:.88rem;color:var(--ink);
+  }
+  select:focus, input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .btn{
+    background:var(--green-deep);color:var(--cream);border:none;padding:10px 18px;border-radius:9px;
+    font-weight:600;cursor:pointer;font-size:.86rem;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn:hover{background:var(--green-mid);}
+  .btn.ghost{background:transparent;color:var(--green-deep);border:1.5px solid var(--green-deep);}
+  .btn.ghost:hover{background:rgba(44,74,52,.06);}
+  .btn.small{padding:8px 14px;font-size:.8rem;}
+
+  .toggle{display:inline-flex;border-radius:100px;border:1.5px solid var(--line);overflow:hidden;}
+  .toggle button{border:none;background:var(--paper);padding:5px 12px;font-size:.76rem;font-weight:600;cursor:pointer;color:#7a8271;}
+  .toggle button.active.p{background:var(--green-mid);color:#fff;}
+  .toggle button.active.a{background:#C25A45;color:#fff;}
+  .salary{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--green-deep);}
+
+  .rate-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding:22px 24px;}
+  .rate-field{background:#FBF6E9;border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .rate-field .rf-label{font-size:.85rem;font-weight:700;color:var(--green-deep);margin-bottom:8px;}
+  .rate-field .rf-sub{font-size:.74rem;color:#8a927e;margin-bottom:10px;}
+  .rate-field .rf-row{display:flex;align-items:center;gap:8px;}
+  .rate-field .rf-row span{font-size:.82rem;color:#7a8271;font-family:'JetBrains Mono';}
+
+  .toolbar{padding:16px 24px;display:flex;gap:10px;flex-wrap:wrap;}
+
+  @media(max-width:980px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{position:relative;height:auto;flex-direction:row;flex-wrap:wrap;}
+    .side-bottom{display:none;}
+    .stats-row{grid-template-columns:1fr 1fr;}
+    .rate-grid{grid-template-columns:1fr;}
+    thead{display:none;}
+    tbody td{display:block;padding:8px 20px;}
+    tbody tr{display:block;padding:10px 0;border-bottom:1px solid var(--line);}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-logo">
+      🌾 FarmGhar
+      <span class="tag">Admin</span>
+    </div>
+    <button class="side-link active" data-view="overview" onclick="showView('overview', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Overview
+    </button>
+    <button class="side-link" data-view="livestock" onclick="showView('livestock', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20c0-4 3-7 8-7s8 3 8 7"/><circle cx="12" cy="7" r="4"/></svg>
+      Livestock Records
+    </button>
+    <button class="side-link" data-view="staff" onclick="showView('staff', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="18" cy="9" r="2.6"/><path d="M15.5 14.2c2.7.4 4.5 2.6 4.5 5.8"/></svg>
+      Staff &amp; Payroll
+    </button>
+    <button class="side-link" data-view="rates" onclick="showView('rates', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      AI Rate Settings
+    </button>
+    <div class="side-bottom">
+      <a class="back-site" href="index.html">← Back to public site</a>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div class="topbar">
+      <div>
+        <h1 style="font-size:1.6rem;">Farm Control Room</h1>
+        <p>Everything you'd normally track on paper — now in one place.</p>
+      </div>
+      <div class="admin-chip">
+        <span class="av">AZ</span>
+        <span>Ahmed Zafar · Owner</span>
+      </div>
+    </div>
+
+    <!-- ===================== OVERVIEW ===================== -->
+    <section class="view active" id="view-overview">
+      <div class="banner">
+        <img src="https://source.unsplash.com/1400x400/?farm,pakistan,landscape" alt="Farm overview">
+        <div class="banner-text">
+          <h3>FarmGhar Homestead</h3>
+          <p>Chak Road, Punjab — 86 cattle · 64 goats · 1,240 birds · 6 staff on roll</p>
+        </div>
+      </div>
+      <div class="stats-row" id="overviewStats"></div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>Today at a glance</h3></div>
+        <div class="rate-grid" style="grid-template-columns:repeat(3,1fr);">
+          <div class="rate-field">
+            <div class="rf-label">Milk collected</div>
+            <div class="rf-sub">All cattle sheds</div>
+            <div class="rf-row"><span class="mono" style="font-size:1.1rem;color:var(--green-deep);">412 L</span></div>
+          </div>
+          <div class="rate-field">
+            <div class="rf-label">Eggs collected</div>
+            <div class="rf-sub">All poultry sheds</div>
+            <div class="rf-row"><span class="mono" style="font-size:1.1rem;color:var(--green-deep);">1,860</span></div>
+          </div>
+          <div class="rate-field">
+            <div class="rf-label">Staff present today</div>
+            <div class="rf-sub">Out of 6 on roll</div>
+            <div class="rf-row"><span class="mono" style="font-size:1.1rem;color:var(--green-deep);" id="ovPresent">5 / 6</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== LIVESTOCK ===================== -->
+    <section class="view" id="view-livestock">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Add livestock record</h3>
+        </div>
+        <div class="form-grid" style="grid-template-columns:1.3fr 1fr 1fr 1fr 1fr auto;">
+          <div class="field"><label>Tag / Batch name</label><input type="text" id="lv-name" placeholder="e.g. Shed-B Cattle"></div>
+          <div class="field"><label>Type</label>
+            <select id="lv-type"><option value="cattle">Cattle</option><option value="goat">Goat</option><option value="poultry">Poultry</option></select>
+          </div>
+          <div class="field"><label>Count</label><input type="number" id="lv-count" value="10" min="1"></div>
+          <div class="field"><label>Output</label>
+            <select id="lv-output"><option value="Meat">Meat</option><option value="Milk">Milk</option><option value="Eggs">Eggs</option><option value="Meat & Milk">Meat &amp; Milk</option></select>
+          </div>
+          <div class="field"><label>Daily yield</label><input type="text" id="lv-yield" placeholder="e.g. 40L or 120 eggs"></div>
+          <div class="field" style="align-self:end;"><button class="btn" onclick="addLivestock()">+ Add Record</button></div>
+        </div>
+        <table>
+          <thead><tr><th>Record</th><th>Type</th><th>Count</th><th>Output</th><th>Daily Yield</th><th></th></tr></thead>
+          <tbody id="lvBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===================== STAFF ===================== -->
+    <section class="view" id="view-staff">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Add staff member</h3>
+        </div>
+        <div class="form-grid" style="grid-template-columns:1.2fr 1.2fr 0.9fr auto;">
+          <div class="field"><label>Full name</label><input type="text" id="st-name" placeholder="e.g. Zainab Noor"></div>
+          <div class="field"><label>Role</label><input type="text" id="st-role" placeholder="e.g. Dairy Hand"></div>
+          <div class="field"><label>Daily rate (Rs)</label><input type="number" id="st-rate" value="800" min="0"></div>
+          <div class="field" style="align-self:end;"><button class="btn" onclick="addStaff()">+ Add Staff</button></div>
+        </div>
+        <div class="panel-head" style="border-top:1px solid var(--line);border-bottom:none;">
+          <h3>Attendance &amp; live payroll</h3>
+          <span class="mono" style="font-size:.85rem;color:var(--rust);font-weight:700;" id="payrollTotal">Payable today: Rs 0</span>
+        </div>
+        <table>
+          <thead><tr><th>Employee</th><th>Role</th><th>Daily Rate</th><th>Today</th><th>Days Present</th><th>Monthly Salary</th><th></th></tr></thead>
+          <tbody id="stBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===================== RATES ===================== -->
+    <section class="view" id="view-rates">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>AI base rate configuration</h3>
+          <span style="font-size:.82rem;color:#7a8271;">These feed the AI estimate on the public site</span>
+        </div>
+        <div class="rate-grid" id="ratesGrid"></div>
+        <div class="toolbar">
+          <button class="btn" onclick="saveRates()">Save Rate Settings</button>
+          <button class="btn ghost" onclick="exportData()">⬇ Export Data (JSON)</button>
+          <label class="btn ghost" style="cursor:pointer;">
+            ⬆ Import Data (JSON)
+            <input type="file" accept="application/json" style="display:none;" onchange="importData(event)">
+          </label>
+        </div>
+        <div style="padding:0 24px 22px;font-size:.78rem;color:#8a927e;">
+          Note: this admin panel runs entirely in your browser for this demo — changes here reset on reload. Use Export/Import to carry your data between sessions, or connect a backend to make it permanent.
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  /* ---------------- View switching ---------------- */
+  function showView(id, btn){
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + id).classList.add('active');
+    document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  /* ---------------- Data (in-memory demo state) ---------------- */
+  let livestock = [
+    {name:"Shed A Cattle", type:"cattle", count:86, output:"Meat & Milk", yield:"412 L milk/day"},
+    {name:"North Paddock Goats", type:"goat", count:64, output:"Meat", yield:"—"},
+    {name:"Poultry House 1", type:"poultry", count:1240, output:"Meat & Eggs", yield:"1,860 eggs/day"}
+  ];
+
+  let staff = [
+    {name:"Rashid Ali", role:"Cattle Caretaker", rate:900, present:22, color:"#3E6B4C"},
+    {name:"Nazia Bibi", role:"Dairy Hand", rate:800, present:24, color:"#B5651D"},
+    {name:"Imran Sheikh", role:"Goat Herder", rate:850, present:20, color:"#6F9FA8"},
+    {name:"Farhan Iqbal", role:"Poultry Supervisor", rate:1000, present:23, color:"#D9A441"},
+    {name:"Saima Kanwal", role:"Egg Collection", rate:750, present:21, color:"#8B6A2A"},
+    {name:"Bilal Yousaf", role:"Feed & Logistics", rate:820, present:22, color:"#2C4A34"}
+  ];
+  let todayStatus = staff.map((_, i) => i % 5 !== 0);
+
+  let rates = {
+    cattle_meat:1150, cattle_milk:220,
+    goat_meat:2100,
+    poultry_meat:520, poultry_eggs:340
+  };
+
+  const palette = ["#3E6B4C","#B5651D","#6F9FA8","#D9A441","#8B6A2A","#2C4A34","#A6432E","#5E7A9C"];
+  function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join(''); }
+
+  /* ---------------- Overview ---------------- */
+  function renderOverview(){
+    const totalCattle = livestock.filter(l=>l.type==='cattle').reduce((s,l)=>s+l.count,0);
+    const totalGoat = livestock.filter(l=>l.type==='goat').reduce((s,l)=>s+l.count,0);
+    const totalPoultry = livestock.filter(l=>l.type==='poultry').reduce((s,l)=>s+l.count,0);
+    const cards = [
+      {label:"Cattle on farm", value: totalCattle, delta:"↑ steady this month"},
+      {label:"Goats on farm", value: totalGoat, delta:"19 ready for sale"},
+      {label:"Poultry birds", value: totalPoultry.toLocaleString('en-PK'), delta:"310 broilers ready"},
+      {label:"Staff on roll", value: staff.length, delta: todayStatus.filter(Boolean).length + " present today"}
+    ];
+    document.getElementById('overviewStats').innerHTML = cards.map(c => `
+      <div class="stat-card">
+        <div class="label">${c.label}</div>
+        <div class="value">${c.value}</div>
+        <div class="delta">${c.delta}</div>
+      </div>`).join('');
+    document.getElementById('ovPresent').textContent = `${todayStatus.filter(Boolean).length} / ${staff.length}`;
+  }
+
+  /* ---------------- Livestock ---------------- */
+  function renderLivestock(){
+    document.getElementById('lvBody').innerHTML = livestock.map((l, i) => `
+      <tr>
+        <td class="row-name">${l.name}</td>
+        <td><span class="tag ${l.type}">${l.type}</span></td>
+        <td class="mono">${l.count}</td>
+        <td>${l.output}</td>
+        <td class="mono">${l.yield}</td>
+        <td>
+          <button class="icon-btn" onclick="removeLivestock(${i})" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
+          </button>
+        </td>
+      </tr>`).join('');
+  }
+  function addLivestock(){
+    const name = document.getElementById('lv-name').value.trim() || 'Unnamed batch';
+    const type = document.getElementById('lv-type').value;
+    const count = Math.max(1, parseInt(document.getElementById('lv-count').value) || 1);
+    const output = document.getElementById('lv-output').value;
+    const yieldv = document.getElementById('lv-yield').value.trim() || '—';
+    livestock.push({name, type, count, output, yield: yieldv});
+    document.getElementById('lv-name').value = '';
+    document.getElementById('lv-yield').value = '';
+    renderLivestock(); renderOverview();
+  }
+  function removeLivestock(i){ livestock.splice(i,1); renderLivestock(); renderOverview(); }
+
+  /* ---------------- Staff & payroll ---------------- */
+  function renderStaff(){
+    document.getElementById('stBody').innerHTML = staff.map((e, i) => {
+      const isPresent = todayStatus[i];
+      const monthly = e.rate * e.present;
+      return `<tr>
+        <td class="row-name"><span class="thumb" style="background:${e.color};display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-weight:700;font-size:.75rem;">${initials(e.name)}</span>${e.name}</td>
+        <td>${e.role}</td>
+        <td class="mono">Rs ${e.rate}</td>
+        <td>
+          <div class="toggle">
+            <button class="${isPresent ? 'active p' : ''}" onclick="setStatus(${i}, true)">P</button>
+            <button class="${!isPresent ? 'active a' : ''}" onclick="setStatus(${i}, false)">A</button>
+          </div>
+        </td>
+        <td class="mono">${e.present} / 26</td>
+        <td class="salary">Rs ${monthly.toLocaleString('en-PK')}</td>
+        <td>
+          <button class="icon-btn" onclick="removeStaff(${i})" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
+          </button>
+        </td>
+      </tr>`;
+    }).join('');
+    const payable = staff.reduce((sum, e, i) => sum + (todayStatus[i] ? e.rate : 0), 0);
+    document.getElementById('payrollTotal').textContent = `Payable today: Rs ${payable.toLocaleString('en-PK')}`;
+    renderOverview();
+  }
+  function setStatus(i, val){
+    const was = todayStatus[i];
+    todayStatus[i] = val;
+    if (was !== val){
+      staff[i].present += val ? 1 : -1;
+      staff[i].present = Math.max(0, Math.min(26, staff[i].present));
+    }
+    renderStaff();
+  }
+  function addStaff(){
+    const name = document.getElementById('st-name').value.trim();
+    const role = document.getElementById('st-role').value.trim() || 'Farm Hand';
+    const rate = Math.max(0, parseInt(document.getElementById('st-rate').value) || 0);
+    if (!name) { document.getElementById('st-name').focus(); return; }
+    staff.push({name, role, rate, present:0, color: palette[staff.length % palette.length]});
+    todayStatus.push(false);
+    document.getElementById('st-name').value = '';
+    document.getElementById('st-role').value = '';
+    renderStaff();
+  }
+  function removeStaff(i){ staff.splice(i,1); todayStatus.splice(i,1); renderStaff(); }
+
+  /* ---------------- Rate settings ---------------- */
+  const rateMeta = [
+    {key:"cattle_meat", label:"Beef", sub:"Cattle · per kg"},
+    {key:"cattle_milk", label:"Milk", sub:"Cattle · per litre"},
+    {key:"goat_meat", label:"Mutton", sub:"Goat · per kg"},
+    {key:"poultry_meat", label:"Chicken meat", sub:"Poultry · per kg"},
+    {key:"poultry_eggs", label:"Eggs", sub:"Poultry · per dozen"}
+  ];
+  function renderRates(){
+    document.getElementById('ratesGrid').innerHTML = rateMeta.map(r => `
+      <div class="rate-field">
+        <div class="rf-label">${r.label}</div>
+        <div class="rf-sub">${r.sub}</div>
+        <div class="rf-row"><span>Rs</span><input type="number" id="rate-${r.key}" value="${rates[r.key]}" min="0"></div>
+      </div>`).join('');
+  }
+  function saveRates(){
+    rateMeta.forEach(r => {
+      rates[r.key] = parseInt(document.getElementById('rate-' + r.key).value) || rates[r.key];
+    });
+    const btn = event.target;
+    const original = btn.textContent;
+    btn.textContent = "✓ Saved";
+    setTimeout(() => btn.textContent = original, 1400);
+  }
+
+  /* ---------------- Export / Import ---------------- */
+  function exportData(){
+    const payload = { livestock, staff, todayStatus, rates };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'farmghar-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  function importData(event){
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try{
+        const data = JSON.parse(e.target.result);
+        if (data.livestock) livestock = data.livestock;
+        if (data.staff) staff = data.staff;
+        if (data.todayStatus) todayStatus = data.todayStatus;
+        if (data.rates) rates = data.rates;
+        renderLivestock(); renderStaff(); renderRates(); renderOverview();
+      }catch(err){ alert('Could not read that file — please choose a FarmGhar export JSON.'); }
+    };
+    reader.readAsText(file);
+  }
+
+  renderOverview(); renderLivestock(); renderStaff(); renderRates();
+</script>
+
+</body>
+</html>
