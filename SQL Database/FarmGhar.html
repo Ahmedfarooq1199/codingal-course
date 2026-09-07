@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sial Farms  — Smart Livestock &amp; Farm Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF3E2; --paper:#FFFDF8; --ink:#23301E;
+    --green-deep:#2C4A34; --green-mid:#3E6B4C;
+    --gold:#D9A441; --gold-soft:#F1D9A0; --rust:#B5651D;
+    --sky:#6F9FA8; --sky-soft:#DCEAEC; --line:#D8CBA9;
+    --radius:18px; --shadow:0 8px 24px rgba(44,74,52,0.10);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{font-family:'Fraunces',serif;margin:0 0 .4em 0;color:var(--green-deep);font-weight:700;letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;} img,svg{display:block;max-width:100%;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  .eyebrow{font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;color:var(--rust);font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--rust);display:inline-block;}
+  [hidden]{display:none !important;}
+
+  /* ---------- Public nav ---------- */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(250,243,226,0.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;max-width:1180px;margin:0 auto;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;color:var(--green-deep);}
+  .logo .mark{width:34px;height:34px;flex:none;}
+  nav.links{display:flex;gap:28px;font-weight:500;font-size:.95rem;}
+  nav.links a{text-decoration:none;color:var(--green-deep);opacity:.75;transition:opacity .2s;cursor:pointer;}
+  nav.links a:hover{opacity:1;}
+  .nav-cta{background:var(--green-deep);color:var(--cream);padding:10px 20px;border-radius:100px;text-decoration:none;font-weight:600;font-size:.9rem;box-shadow:var(--shadow);border:none;cursor:pointer;}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:64px 0 40px;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center;}
+  .hero h1{font-size:clamp(2.3rem,4vw,3.5rem);line-height:1.05;}
+  .hero .accent{color:var(--rust);font-style:italic;font-weight:500;}
+  .hero p.lead{font-size:1.1rem;max-width:46ch;color:#4C5A46;margin-bottom:26px;}
+  .hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px;}
+  .btn-primary{background:var(--rust);color:var(--paper);padding:14px 26px;border-radius:100px;text-decoration:none;font-weight:600;box-shadow:var(--shadow);border:none;cursor:pointer;font-size:1rem;transition:transform .15s ease;}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-secondary{background:transparent;color:var(--green-deep);padding:14px 22px;border-radius:100px;text-decoration:none;font-weight:600;border:1.5px solid var(--green-deep);font-size:1rem;transition:background .15s ease;cursor:pointer;}
+  .btn-secondary:hover{background:rgba(44,74,52,.06);}
+  .hero-stats{display:flex;gap:28px;flex-wrap:wrap;}
+  .hero-stat b{display:block;font-family:'Fraunces',serif;font-size:1.6rem;color:var(--green-deep);}
+  .hero-stat span{font-size:.78rem;color:#6b7566;text-transform:uppercase;letter-spacing:.06em;}
+  .hero-art svg{width:100%;height:auto;}
+
+  section{padding:70px 0;}
+  .section-head{max-width:640px;margin-bottom:40px;}
+  .section-head h2{font-size:clamp(1.7rem,3vw,2.3rem);}
+  .section-head p{color:#586252;font-size:1.02rem;}
+
+  /* ---------- Livestock cards ---------- */
+  .stock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .stock-card{background:var(--paper);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;}
+  .stock-card .photo{width:100%;height:150px;object-fit:cover;display:block;}
+  .stock-card .card-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:12px;}
+  .stock-card .icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-top:-46px;border:3px solid var(--paper);position:relative;z-index:1;}
+  .stock-card.cattle .icon-wrap{background:var(--sky-soft);}
+  .stock-card.goat .icon-wrap{background:var(--gold-soft);}
+  .stock-card.poultry .icon-wrap{background:#F3E1DA;}
+  .stock-card h3{font-size:1.2rem;margin-bottom:2px;}
+  .stock-card .sub{font-size:.85rem;color:#7a8271;font-weight:500;}
+  .stat-row{display:flex;justify-content:space-between;font-size:.9rem;padding:7px 0;border-top:1px dashed var(--line);}
+  .stat-row:first-of-type{border-top:none;}
+  .stat-row b{font-family:'JetBrains Mono',monospace;color:var(--green-deep);}
+
+  /* ---------- AI Rate Ledger ---------- */
+  .ledger{background:var(--green-deep);border-radius:24px;padding:52px;display:grid;grid-template-columns:0.85fr 1.15fr;gap:44px;color:var(--cream);position:relative;overflow:hidden;}
+  .ledger::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(to bottom,transparent,transparent 27px,rgba(250,243,226,0.05) 28px);pointer-events:none;}
+  .ledger-left h2{color:var(--cream);} .ledger-left .eyebrow{color:var(--gold);} .ledger-left .eyebrow::before{background:var(--gold);}
+  .ledger-left p{color:#D9E2D2;font-size:.98rem;max-width:38ch;}
+  .ai-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(217,164,65,0.16);border:1px solid rgba(217,164,65,.5);color:var(--gold);padding:6px 14px;border-radius:100px;font-size:.78rem;font-weight:700;letter-spacing:.04em;margin-top:18px;}
+  .ai-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+  .rate-card{background:var(--paper);border-radius:16px;padding:26px;color:var(--ink);position:relative;z-index:1;box-shadow:0 14px 34px rgba(0,0,0,.22);}
+  .rate-card label{display:block;font-size:.78rem;font-weight:600;color:#586252;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+  .rate-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+  select,input[type=number],input[type=text]{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--cream);font-family:'Work Sans',sans-serif;font-size:.95rem;color:var(--ink);}
+  select:focus,input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .rate-output{margin-top:8px;background:var(--cream);border-radius:12px;padding:18px 20px;border:1px dashed var(--rust);}
+  .rate-output .figure{font-family:'Fraunces',serif;font-size:2.1rem;color:var(--rust);font-weight:700;}
+  .rate-output .figure span{font-size:1rem;font-family:'Work Sans';font-weight:600;color:#586252;}
+  .rate-output .note{font-size:.84rem;color:#586252;margin-top:8px;}
+  .rate-btn{margin-top:16px;width:100%;background:var(--green-deep);color:var(--cream);padding:13px;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-size:.96rem;transition:background .15s;}
+  .rate-btn:hover{background:var(--green-mid);}
+  .disclaimer{font-size:.72rem;color:#9aa38f;margin-top:10px;}
+
+  /* ---------- Gallery ---------- */
+  .gallery-grid{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:1fr 1fr;gap:16px;height:460px;}
+  .gallery-grid img{width:100%;height:100%;object-fit:cover;border-radius:16px;border:1px solid var(--line);}
+  .gallery-grid img:first-child{grid-row:1/3;}
+
+  /* ---------- Features ---------- */
+  .features{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .feature{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);}
+  .feature .num{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--rust);font-weight:700;margin-bottom:10px;}
+  .feature h4{font-size:1.02rem;margin-bottom:6px;} .feature p{font-size:.86rem;color:#586252;margin:0;}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--green-deep);color:var(--cream);padding:56px 0 26px;margin-top:40px;}
+  .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:36px;padding-bottom:36px;border-bottom:1px solid rgba(250,243,226,.15);}
+  footer h4{color:var(--gold-soft);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;font-family:'Work Sans';}
+  footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:.92rem;color:#D9E2D2;}
+  footer .logo{color:var(--cream);}
+  footer p.tag{color:#B9C6B2;font-size:.9rem;max-width:34ch;margin-top:10px;}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;flex-wrap:wrap;gap:10px;font-size:.82rem;color:#B9C6B2;}
+  .foot-bottom .powered{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--gold-soft);}
+  .foot-bottom .powered svg{width:16px;height:16px;}
+
+  /* =====================================================================
+     ADMIN VIEW
+     ===================================================================== */
+  .shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh;}
+  .sidebar{background:var(--green-deep);color:var(--cream);padding:26px 20px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;}
+  .side-logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:1.15rem;color:var(--cream);margin-bottom:26px;}
+  .side-logo .tag{display:block;font-family:'Work Sans';font-size:.68rem;color:var(--gold-soft);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+  .side-link{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:#D9E2D2;text-decoration:none;font-size:.92rem;font-weight:500;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'Work Sans';}
+  .side-link svg{width:18px;height:18px;flex:none;opacity:.85;}
+  .side-link:hover{background:rgba(250,243,226,.08);}
+  .side-link.active{background:var(--gold);color:var(--green-deep);font-weight:700;}
+  .side-link.active svg{opacity:1;}
+  .side-bottom{margin-top:auto;border-top:1px solid rgba(250,243,226,.15);padding-top:16px;}
+  .back-site{color:var(--gold-soft);font-size:.82rem;text-decoration:none;display:flex;align-items:center;gap:8px;font-weight:600;background:none;border:none;cursor:pointer;font-family:'Work Sans';padding:0;}
+  .main{padding:32px 40px 60px;}
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+  .topbar p{color:#586252;margin:4px 0 0;}
+  .admin-chip{display:flex;align-items:center;gap:10px;background:var(--paper);padding:8px 16px 8px 8px;border-radius:100px;border:1px solid var(--line);box-shadow:var(--shadow);}
+  .admin-chip .av{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--green-deep);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;}
+  .admin-chip span{font-size:.85rem;font-weight:600;color:var(--green-deep);}
+  .adview{display:none;} .adview.active{display:block;}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:30px;}
+  .stat-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+  .stat-card .label{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:#7a8271;font-weight:600;margin-bottom:8px;}
+  .stat-card .value{font-family:'Fraunces',serif;font-size:1.7rem;color:var(--green-deep);}
+  .stat-card .delta{font-size:.78rem;color:var(--green-mid);font-weight:600;margin-top:4px;}
+  .banner{border-radius:20px;overflow:hidden;position:relative;height:190px;margin-bottom:30px;display:flex;align-items:flex-end;}
+  .banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .banner::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(35,48,30,.75),rgba(35,48,30,.05));}
+  .banner-text{position:relative;z-index:1;padding:22px 26px;color:var(--cream);}
+  .banner-text h3{color:var(--cream);font-size:1.3rem;} .banner-text p{margin:2px 0 0;color:#E7E2D2;font-size:.9rem;}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:26px;}
+  .panel-head{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:12px;}
+  .panel-head h3{font-size:1.05rem;}
+  table{width:100%;border-collapse:collapse;}
+  thead th{text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#7a8271;padding:12px 24px;border-bottom:1px solid var(--line);}
+  tbody td{padding:13px 24px;border-bottom:1px solid var(--line);font-size:.9rem;}
+  tbody tr:last-child td{border-bottom:none;} tbody tr:hover{background:#FBF6E9;}
+  .row-name{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--green-deep);}
+  .thumb{width:34px;height:34px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-weight:700;font-size:.75rem;}
+  .tag{padding:4px 10px;border-radius:100px;font-size:.72rem;font-weight:700;text-transform:capitalize;}
+  .tag.cattle{background:var(--sky-soft);color:#2F5E66;} .tag.goat{background:var(--gold-soft);color:var(--rust);} .tag.poultry{background:#F3E1DA;color:#A6432E;}
+  .icon-btn{background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;color:#8a927e;}
+  .icon-btn:hover{background:#F1E9D3;color:#C25A45;} .icon-btn svg{width:16px;height:16px;}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;padding:20px 24px;background:#FBF6E9;border-bottom:1px solid var(--line);}
+  .field label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#7a8271;margin-bottom:6px;}
+  .btn{background:var(--green-deep);color:var(--cream);border:none;padding:10px 18px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.86rem;display:inline-flex;align-items:center;gap:8px;}
+  .btn:hover{background:var(--green-mid);}
+  .btn.ghost{background:transparent;color:var(--green-deep);border:1.5px solid var(--green-deep);} .btn.ghost:hover{background:rgba(44,74,52,.06);}
+  .toggle{display:inline-flex;border-radius:100px;border:1.5px solid var(--line);overflow:hidden;}
+  .toggle button{border:none;background:var(--paper);padding:5px 12px;font-size:.76rem;font-weight:600;cursor:pointer;color:#7a8271;}
+  .toggle button.active.p{background:var(--green-mid);color:#fff;} .toggle button.active.a{background:#C25A45;color:#fff;}
+  .salary{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--green-deep);}
+  .rate-grid-admin{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding:22px 24px;}
+  .rate-field{background:#FBF6E9;border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .rate-field .rf-label{font-size:.85rem;font-weight:700;color:var(--green-deep);margin-bottom:8px;}
+  .rate-field .rf-sub{font-size:.74rem;color:#8a927e;margin-bottom:10px;}
+  .rate-field .rf-row{display:flex;align-items:center;gap:8px;} .rate-field .rf-row span{font-size:.82rem;color:#7a8271;font-family:'JetBrains Mono';}
+  .toolbar{padding:16px 24px;display:flex;gap:10px;flex-wrap:wrap;}
+  .sync-note{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--green-mid);font-weight:600;background:#E4F0E3;padding:7px 13px;border-radius:100px;}
+  .sync-note svg{width:14px;height:14px;}
+
+  /* ---------- Admin gate ---------- */
+  .gate{position:fixed;inset:0;background:rgba(35,48,30,.7);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;}
+  .gate-card{background:var(--paper);border-radius:20px;padding:36px;max-width:360px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.3);text-align:center;}
+  .gate-card h3{margin-bottom:6px;} .gate-card p{color:#586252;font-size:.9rem;margin-bottom:20px;}
+  .gate-card input{text-align:center;letter-spacing:.2em;font-family:'JetBrains Mono';margin-bottom:14px;}
+  .gate-hint{font-size:.74rem;color:#9aa38f;margin-top:12px;}
+
+  @media (max-width:980px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{position:relative;height:auto;flex-direction:row;flex-wrap:wrap;}
+    .side-bottom{display:none;}
+    .stats-row{grid-template-columns:1fr 1fr;}
+    .rate-grid-admin{grid-template-columns:1fr;}
+  }
+  @media (max-width:880px){
+    nav.links{display:none;}
+    .hero-grid{grid-template-columns:1fr;}
+    .stock-grid{grid-template-columns:1fr;}
+    .ledger{grid-template-columns:1fr;padding:32px;}
+    .features{grid-template-columns:1fr 1fr;}
+    .foot-grid{grid-template-columns:1fr;}
+    .gallery-grid{grid-template-columns:1fr;grid-template-rows:auto;height:auto;}
+    .gallery-grid img:first-child{grid-row:auto;height:220px;}
+    thead{display:none;}
+    tbody td{display:block;padding:8px 20px;}
+    tbody tr{border-bottom:1px solid var(--line);padding:10px 0;display:block;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================================================================
+     PUBLIC SITE
+     =================================================================== -->
+<div id="publicPage">
+
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="logo">
+        <svg class="mark" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="#2C4A34"/><path d="M11 24c0-5 4-8 9-8s9 3 9 8" stroke="#F1D9A0" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="14" r="3.4" fill="#D9A441"/><path d="M9 26h22" stroke="#F1D9A0" stroke-width="2" stroke-linecap="round"/></svg>
+        FarmGhar
+      </div>
+      <nav class="links">
+        <a onclick="scrollToId('livestock')">Livestock</a>
+        <a onclick="scrollToId('rates')">AI Rates</a>
+        <a onclick="scrollToId('gallery')">Gallery</a>
+        <a onclick="openGate()">Admin</a>
+      </nav>
+      <button class="nav-cta" onclick="openGate()">Admin Panel →</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Farm management, made local</div>
+        <h1>Har janwar ka hisaab, <span class="accent">ek hi ghar mein.</span></h1>
+        <p class="lead">FarmGhar tracks your cattle, goats and poultry — meat, milk and eggs — while an AI pricing engine keeps you close to Pakistan's daily mandi rates, and payroll runs itself off real attendance.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="scrollToId('rates')">Check AI Rates →</button>
+          <button class="btn-secondary" onclick="openGate()">Open Admin Panel</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b id="hsCattle">86</b><span>Cattle</span></div>
+          <div class="hero-stat"><b id="hsGoat">64</b><span>Goats</span></div>
+          <div class="hero-stat"><b id="hsPoultry">1,240</b><span>Poultry</span></div>
+          <div class="hero-stat"><b id="hsStaff">6</b><span>Farm Staff</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 560 460" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="280" cy="410" rx="230" ry="26" fill="#E7DAB4"/>
+          <circle cx="452" cy="86" r="46" fill="#F1D9A0"/>
+          <g stroke="#F1D9A0" stroke-width="4" stroke-linecap="round"><line x1="452" y1="14" x2="452" y2="30"/><line x1="504" y1="34" x2="492" y2="46"/><line x1="524" y1="86" x2="508" y2="86"/></g>
+          <polygon points="70,230 190,150 310,230" fill="#B5651D"/>
+          <rect x="90" y="230" width="200" height="140" fill="#F6E9D0" stroke="#D8CBA9" stroke-width="2"/>
+          <polygon points="90,230 190,178 290,230" fill="#C97A34"/>
+          <rect x="160" y="290" width="60" height="80" fill="#2C4A34"/>
+          <circle cx="190" cy="330" r="3.5" fill="#F1D9A0"/>
+          <rect x="100" y="248" width="34" height="34" fill="#6F9FA8" opacity=".85"/>
+          <rect x="246" y="248" width="34" height="34" fill="#6F9FA8" opacity=".85"/>
+          <rect x="176" y="140" width="28" height="28" fill="#6F9FA8" opacity=".85"/>
+          <g transform="translate(330,300)">
+            <path d="M0 90 C -4 60 -4 30 0 0" stroke="#8B6A2A" stroke-width="3" fill="none"/>
+            <path d="M20 95 C 16 62 16 32 20 4" stroke="#8B6A2A" stroke-width="3" fill="none"/>
+            <path d="M40 90 C 44 60 44 30 40 0" stroke="#8B6A2A" stroke-width="3" fill="none"/>
+            <g fill="#D9A441"><ellipse cx="0" cy="4" rx="6" ry="10"/><ellipse cx="-8" cy="18" rx="6" ry="10"/><ellipse cx="8" cy="18" rx="6" ry="10"/><ellipse cx="20" cy="8" rx="6" ry="10"/><ellipse cx="12" cy="22" rx="6" ry="10"/><ellipse cx="28" cy="22" rx="6" ry="10"/><ellipse cx="40" cy="4" rx="6" ry="10"/><ellipse cx="32" cy="18" rx="6" ry="10"/><ellipse cx="48" cy="18" rx="6" ry="10"/></g>
+          </g>
+          <g transform="translate(50,300)">
+            <ellipse cx="60" cy="80" rx="58" ry="34" fill="#FAF3E2" stroke="#23301E" stroke-width="3"/>
+            <circle cx="120" cy="60" r="26" fill="#FAF3E2" stroke="#23301E" stroke-width="3"/>
+            <circle cx="112" cy="56" r="3" fill="#23301E"/>
+            <ellipse cx="34" cy="70" rx="12" ry="16" fill="#23301E"/>
+            <ellipse cx="70" cy="90" rx="14" ry="10" fill="#23301E"/>
+            <path d="M4 100 L4 118 M28 108 L28 124 M92 108 L92 124 M114 100 L114 118" stroke="#23301E" stroke-width="5" stroke-linecap="round"/>
+            <path d="M100 42 q8 -14 20 -8" stroke="#23301E" stroke-width="3" fill="none"/>
+            <path d="M132 42 q6 -14 -4 -18" stroke="#23301E" stroke-width="3" fill="none"/>
+          </g>
+          <g transform="translate(230,330)">
+            <ellipse cx="40" cy="60" rx="40" ry="26" fill="#F1D9A0" stroke="#23301E" stroke-width="3"/>
+            <circle cx="84" cy="42" r="20" fill="#F1D9A0" stroke="#23301E" stroke-width="3"/>
+            <path d="M76 26 q-4 -14 4 -18 M92 26 q6 -14 -2 -18" stroke="#23301E" stroke-width="3" fill="none"/>
+            <circle cx="90" cy="40" r="2.4" fill="#23301E"/>
+            <path d="M2 74 L2 90 M20 80 L20 94 M60 80 L60 94 M78 74 L78 90" stroke="#23301E" stroke-width="5" stroke-linecap="round"/>
+          </g>
+          <g transform="translate(360,350)">
+            <ellipse cx="26" cy="40" rx="24" ry="20" fill="#F6E9D0" stroke="#23301E" stroke-width="3"/>
+            <circle cx="50" cy="24" r="12" fill="#F6E9D0" stroke="#23301E" stroke-width="3"/>
+            <polygon points="60,24 70,28 60,32" fill="#D9A441" stroke="#23301E" stroke-width="2"/>
+            <path d="M44 14 q2 -8 8 -6 q2 6 -3 9" fill="#B5651D" stroke="#23301E" stroke-width="1.5"/>
+            <circle cx="52" cy="21" r="1.8" fill="#23301E"/>
+            <path d="M6 56 L4 68 M22 60 L22 72 M34 60 L36 72" stroke="#23301E" stroke-width="4" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="livestock">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Herd &amp; Flock</div>
+        <h2>Every animal, three ledgers.</h2>
+        <p>Cattle, goats and poultry are tracked separately because they earn differently — some in meat, some in milk, some in daily eggs. Pulled live from the Admin panel.</p>
+      </div>
+      <div class="stock-grid" id="stockGrid"></div>
+    </div>
+  </section>
+
+  <section id="rates">
+    <div class="wrap">
+      <div class="ledger">
+        <div class="ledger-left">
+          <div class="eyebrow">AI Pricing Engine</div>
+          <h2>Aaj ka rate, before you sell.</h2>
+          <p>Pick your animal and product, and FarmGhar's AI cross-checks it against typical Pakistani mandi and retail bands to suggest a fair asking price.</p>
+          <div class="ai-badge"><span class="dot"></span> AI-Powered Estimate</div>
+        </div>
+        <div class="rate-card">
+          <div class="rate-row">
+            <div><label>Animal</label><select id="animal"></select></div>
+            <div><label>Product</label><select id="product"></select></div>
+          </div>
+          <div class="rate-row">
+            <div><label>Quantity (kg or litre)</label><input type="number" id="qty" value="10" min="1"></div>
+            <div><label>City tier</label>
+              <select id="city">
+                <option value="1">Metro (Karachi/Lahore/Isb)</option>
+                <option value="0.93">Istanbol</option>
+                <option value="0.85">Mian Channu/Khanewal</option>
+              </select>
+            </div>
+          </div>
+          <button class="rate-btn" onclick="calcRate()">Generate AI Estimate</button>
+          <div class="rate-output" id="rateOut">
+            <div class="figure" id="figureNum">—</div>
+            <div class="note" id="rateNote">Choose your inputs and generate an estimate.</div>
+          </div>
+          <div class="disclaimer">Indicative only — based on typical Pakistan livestock market ranges, adjusted for city tier and quantity. Base rates are set live from the Admin panel.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="wrap">
+      <div class="section-head"><div class="eyebrow">On the Farm</div><h2>A look around FarmGhar.</h2></div>
+      <div class="gallery-grid">
+        <img src="https://source.unsplash.com/900x700/?farmer,pakistan,field" alt="Farmland">
+        <img src="https://source.unsplash.com/600x460/?cow,milking" alt="Milking">
+        <img src="https://source.unsplash.com/600x460/?goat,farm,animal" alt="Goats">
+        <img src="https://source.unsplash.com/600x460/?eggs,basket,farm" alt="Fresh eggs">
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head"><div class="eyebrow">Why FarmGhar</div><h2>Built around how Pakistani farms actually run.</h2></div>
+      <div class="features">
+        <div class="feature"><div class="num">MEAT</div><h4>Live &amp; Dressed Weight</h4><p>Track cattle, goat and poultry weight from arrival to sale, with per-kg rate suggestions.</p></div>
+        <div class="feature"><div class="num">MILK</div><h4>Daily Yield Log</h4><p>Record litres per animal per session and compare against the AI dairy price band.</p></div>
+        <div class="feature"><div class="num">EGGS</div><h4>Flock Egg Count</h4><p>Log daily egg collection per shed and value it against current tray/dozen rates.</p></div>
+        <div class="feature"><div class="num">STAFF</div><h4>Attendance → Payroll</h4><p>The Admin register drives both attendance history and automatic salary calculation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <div class="logo">
+            <svg class="mark" viewBox="0 0 40 40" fill="none" style="width:30px;height:30px;"><circle cx="20" cy="20" r="20" fill="#F1D9A0"/><path d="M11 24c0-5 4-8 9-8s9 3 9 8" stroke="#2C4A34" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="14" r="3.4" fill="#B5651D"/></svg>
+            FarmGhar
+          </div>
+          <p class="tag">Livestock, dairy, poultry and payroll — one farm ledger, built for Pakistan.</p>
+        </div>
+        <div>
+          <h4>Sections</h4>
+          <ul>
+            <li><a onclick="scrollToId('livestock')">Livestock</a></li>
+            <li><a onclick="scrollToId('rates')">AI Rates</a></li>
+            <li><a onclick="scrollToId('gallery')">Gallery</a></li>
+            <li><a onclick="openGate()">Admin</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Farm Office</h4>
+          <ul><li>Chak Road, Punjab, Pakistan</li><li>info@farmghar.pk</li><li>+92 300 0000000</li></ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 FarmGhar. All rights reserved.</span>
+        <span class="powered"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#D9A441" stroke-width="2"/><path d="M6 10.5l2.5 2.5L14 7.5" stroke="#D9A441" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Powered by Doodle Dash</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================================================================
+     ADMIN GATE
+     =================================================================== -->
+<div class="gate" id="gate" hidden>
+  <div class="gate-card">
+    <h3>Admin Access</h3>
+    <p>Enter the farm passcode to open the control room.</p>
+    <input type="text" id="gateCode" placeholder="Passcode">
+    <button class="btn" style="width:100%;justify-content:center;" onclick="checkGate()">Unlock Admin</button>
+    <div class="gate-hint">Demo passcode: <b class="mono">farmghar</b></div>
+    <button class="back-site" style="margin-top:16px;justify-content:center;width:100%;" onclick="closeGate()">← Back to site</button>
+  </div>
+</div>
+
+<!-- ===================================================================
+     ADMIN PANEL
+     =================================================================== -->
+<div class="shell" id="adminPage" hidden>
+  <aside class="sidebar">
+    <div class="side-logo">🌾 FarmGhar<span class="tag">Admin</span></div>
+    <button class="side-link active" data-view="overview" onclick="showAdView('overview', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Overview
+    </button>
+    <button class="side-link" data-view="livestock" onclick="showAdView('livestock', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20c0-4 3-7 8-7s8 3 8 7"/><circle cx="12" cy="7" r="4"/></svg>
+      Livestock Records
+    </button>
+    <button class="side-link" data-view="staff" onclick="showAdView('staff', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="18" cy="9" r="2.6"/><path d="M15.5 14.2c2.7.4 4.5 2.6 4.5 5.8"/></svg>
+      Staff &amp; Payroll
+    </button>
+    <button class="side-link" data-view="rates" onclick="showAdView('rates', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      AI Rate Settings
+    </button>
+    <div class="side-bottom">
+      <button class="back-site" onclick="goPublic()">← Back to public site</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 style="font-size:1.6rem;">Farm Control Room</h1>
+        <p>Everything you edit here updates the public site instantly.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="sync-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Live-synced</span>
+        <div class="admin-chip"><span class="av">AZ</span><span>Ahmed Zafar · Owner</span></div>
+      </div>
+    </div>
+
+    <section class="adview active" id="adview-overview">
+      <div class="banner">
+        <img src="https://source.unsplash.com/1400x400/?farm,pakistan,landscape" alt="Farm overview">
+        <div class="banner-text"><h3>FarmGhar Homestead</h3><p id="bannerSub">Chak Road, Punjab</p></div>
+      </div>
+      <div class="stats-row" id="overviewStats"></div>
+      <div class="panel">
+        <div class="panel-head"><h3>Today at a glance</h3></div>
+        <div class="rate-grid-admin" style="grid-template-columns:repeat(3,1fr);">
+          <div class="rate-field"><div class="rf-label">Milk collected</div><div class="rf-sub">All cattle sheds</div><div class="rf-row"><span class="mono" style="font-size:1.1rem;color:var(--green-deep);">412 L</span></div></div>
+          <div class="rate-field"><div class="rf-label">Eggs collected</div><div class="rf-sub">All poultry sheds</div><div class="rf-row"><span class="mono" style="font-size:1.1rem;color:var(--green-deep);">1,860</span></div></div>
+          <div class="rate-field"><div class="rf-label">Staff present today</div><div class="rf-sub">Out of roll</div><div class="rf-row"><span class="mono" style="font-size:1.1rem;color:var(--green-deep);" id="ovPresent">0 / 0</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="adview" id="adview-livestock">
+      <div class="panel">
+        <div class="panel-head"><h3>Add livestock record</h3></div>
+        <div class="form-grid" style="grid-template-columns:1.3fr 1fr 1fr 1fr 1fr auto;">
+          <div class="field"><label>Tag / Batch name</label><input type="text" id="lv-name" placeholder="e.g. Shed-B Cattle"></div>
+          <div class="field"><label>Type</label><select id="lv-type"><option value="cattle">Cattle</option><option value="goat">Goat</option><option value="poultry">Poultry</option></select></div>
+          <div class="field"><label>Count</label><input type="number" id="lv-count" value="10" min="1"></div>
+          <div class="field"><label>Output</label><select id="lv-output"><option value="Meat">Meat</option><option value="Milk">Milk</option><option value="Eggs">Eggs</option><option value="Meat & Milk">Meat &amp; Milk</option></select></div>
+          <div class="field"><label>Daily yield</label><input type="text" id="lv-yield" placeholder="e.g. 40L or 120 eggs"></div>
+          <div class="field" style="align-self:end;"><button class="btn" onclick="addLivestock()">+ Add Record</button></div>
+        </div>
+        <table><thead><tr><th>Record</th><th>Type</th><th>Count</th><th>Output</th><th>Daily Yield</th><th></th></tr></thead><tbody id="lvBody"></tbody></table>
+      </div>
+    </section>
+
+    <section class="adview" id="adview-staff">
+      <div class="panel">
+        <div class="panel-head"><h3>Add staff member</h3></div>
+        <div class="form-grid" style="grid-template-columns:1.2fr 1.2fr 0.9fr auto;">
+          <div class="field"><label>Full name</label><input type="text" id="st-name" placeholder="e.g. Zainab Noor"></div>
+          <div class="field"><label>Role</label><input type="text" id="st-role" placeholder="e.g. Dairy Hand"></div>
+          <div class="field"><label>Daily rate (Rs)</label><input type="number" id="st-rate" value="800" min="0"></div>
+          <div class="field" style="align-self:end;"><button class="btn" onclick="addStaff()">+ Add Staff</button></div>
+        </div>
+        <div class="panel-head" style="border-top:1px solid var(--line);border-bottom:none;">
+          <h3>Attendance &amp; live payroll</h3>
+          <span class="mono" style="font-size:.85rem;color:var(--rust);font-weight:700;" id="payrollTotal">Payable today: Rs 0</span>
+        </div>
+        <table><thead><tr><th>Employee</th><th>Role</th><th>Daily Rate</th><th>Today</th><th>Days Present</th><th>Monthly Salary</th><th></th></tr></thead><tbody id="stBody"></tbody></table>
+      </div>
+    </section>
+
+    <section class="adview" id="adview-rates">
+      <div class="panel">
+        <div class="panel-head"><h3>AI base rate configuration</h3><span style="font-size:.82rem;color:#7a8271;">Feeds the AI estimate on the public site, live</span></div>
+        <div class="rate-grid-admin" id="ratesGrid"></div>
+        <div class="toolbar">
+          <button class="btn" onclick="saveRates()">Save Rate Settings</button>
+          <button class="btn ghost" onclick="exportData()">⬇ Export Data (JSON)</button>
+          <label class="btn ghost" style="cursor:pointer;">⬆ Import Data (JSON)<input type="file" accept="application/json" style="display:none;" onchange="importData(event)"></label>
+        </div>
+        <div style="padding:0 24px 22px;font-size:.78rem;color:#8a927e;">
+          Changes here apply to the public site immediately, in this browser session. Use Export/Import to move your data to another device or back it up.
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  /* =====================================================================
+     SHARED STATE — this is what actually interconnects the two "pages"
+     ===================================================================== */
+  let state = {
+    livestock: [
+      {name:"Shed A Cattle", type:"cattle", count:86, output:"Meat & Milk", yield:"412 L milk/day"},
+      {name:"North Paddock Goats", type:"goat", count:64, output:"Meat", yield:"—"},
+      {name:"Poultry House 1", type:"poultry", count:1240, output:"Meat & Eggs", yield:"1,860 eggs/day"}
+    ],
+    staff: [
+      {name:"Rashid Ali", role:"Cattle Caretaker", rate:900, present:22, color:"#3E6B4C"},
+      {name:"Nazia Bibi", role:"Dairy Hand", rate:800, present:24, color:"#B5651D"},
+      {name:"Imran Sheikh", role:"Goat Herder", rate:850, present:20, color:"#6F9FA8"},
+      {name:"Farhan Iqbal", role:"Poultry Supervisor", rate:1000, present:23, color:"#D9A441"},
+      {name:"Saima Kanwal", role:"Egg Collection", rate:750, present:21, color:"#8B6A2A"},
+      {name:"Bilal Yousaf", role:"Feed & Logistics", rate:820, present:22, color:"#2C4A34"}
+    ],
+    todayStatus: [true,true,true,true,true,false],
+    rates: { cattle_meat:1150, cattle_milk:220, goat_meat:2100, poultry_meat:520, poultry_eggs:340 }
+  };
+
+  const productMeta = {
+    cattle: [{v:"cattle_meat", label:"Beef (per kg)"}, {v:"cattle_milk", label:"Milk (per litre)"}],
+    goat: [{v:"goat_meat", label:"Mutton (per kg)"}],
+    poultry: [{v:"poultry_meat", label:"Chicken Meat (per kg)"}, {v:"poultry_eggs", label:"Eggs (per dozen)"}]
+  };
+  const rateMeta = [
+    {key:"cattle_meat", label:"Beef", sub:"Cattle · per kg"},
+    {key:"cattle_milk", label:"Milk", sub:"Cattle · per litre"},
+    {key:"goat_meat", label:"Mutton", sub:"Goat · per kg"},
+    {key:"poultry_meat", label:"Chicken meat", sub:"Poultry · per kg"},
+    {key:"poultry_eggs", label:"Eggs", sub:"Poultry · per dozen"}
+  ];
+  const palette = ["#3E6B4C","#B5651D","#6F9FA8","#D9A441","#8B6A2A","#2C4A34","#A6432E","#5E7A9C"];
+  function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join(''); }
+
+  /* ---------------- Persistence (Claude artifact storage; falls back to memory-only) ---------------- */
+  async function saveState(){
+    try{
+      if (window.storage) await window.storage.set('farmghar_state', JSON.stringify(state), false);
+    }catch(e){ /* storage unavailable outside claude.ai — state still works in-memory for this session */ }
+  }
+  async function loadState(){
+    try{
+      if (window.storage){
+        const res = await window.storage.get('farmghar_state', false);
+        if (res && res.value) state = JSON.parse(res.value);
+      }
+    }catch(e){ /* no saved state yet, or storage unavailable — use defaults */ }
+    renderAll();
+  }
+
+  /* ---------------- Render: PUBLIC ---------------- */
+  function renderPublic(){
+    const totalCattle = state.livestock.filter(l=>l.type==='cattle').reduce((s,l)=>s+l.count,0);
+    const totalGoat = state.livestock.filter(l=>l.type==='goat').reduce((s,l)=>s+l.count,0);
+    const totalPoultry = state.livestock.filter(l=>l.type==='poultry').reduce((s,l)=>s+l.count,0);
+    document.getElementById('hsCattle').textContent = totalCattle;
+    document.getElementById('hsGoat').textContent = totalGoat;
+    document.getElementById('hsPoultry').textContent = totalPoultry.toLocaleString('en-PK');
+    document.getElementById('hsStaff').textContent = state.staff.length;
+
+    const iconFor = { cattle: `<svg width="26" height="26" viewBox="0 0 40 40"><ellipse cx="20" cy="24" rx="16" ry="10" fill="#6F9FA8"/><circle cx="30" cy="16" r="7" fill="#6F9FA8"/><path d="M28 10q2-4 6-2M34 10q2-4-1-5" stroke="#2C4A34" stroke-width="2" fill="none"/></svg>`,
+                       goat: `<svg width="26" height="26" viewBox="0 0 40 40"><ellipse cx="18" cy="24" rx="14" ry="9" fill="#D9A441"/><circle cx="30" cy="15" r="6" fill="#D9A441"/><path d="M27 10q-2-5 1-6M33 10q2-5-1-7" stroke="#2C4A34" stroke-width="2" fill="none"/></svg>`,
+                       poultry: `<svg width="26" height="26" viewBox="0 0 40 40"><ellipse cx="18" cy="24" rx="13" ry="11" fill="#B5651D"/><circle cx="30" cy="15" r="7" fill="#B5651D"/><polygon points="37,15 44,17 37,19" fill="#D9A441"/></svg>` };
+    const photoFor = { cattle:"https://source.unsplash.com/800x500/?dairy,cow,pasture", goat:"https://source.unsplash.com/800x500/?goat,herd,farm", poultry:"https://source.unsplash.com/800x500/?chicken,poultry,farm" };
+
+    document.getElementById('stockGrid').innerHTML = state.livestock.map(l => `
+      <div class="stock-card ${l.type}">
+        <img class="photo" src="${photoFor[l.type]}" alt="${l.type}">
+        <div class="card-body">
+          <div class="icon-wrap">${iconFor[l.type]}</div>
+          <h3>${l.name}</h3>
+          <div class="sub">${l.output}</div>
+          <div class="stat-row"><span>Count</span><b>${l.count.toLocaleString('en-PK')}</b></div>
+          <div class="stat-row"><span>Daily yield</span><b>${l.yield}</b></div>
+        </div>
+      </div>`).join('');
+
+    refreshProducts();
+  }
+
+  const animalSel = () => document.getElementById('animal');
+  const productSel = () => document.getElementById('product');
+  function refreshProducts(){
+    const types = [...new Set(state.livestock.map(l=>l.type))];
+    animalSel().innerHTML = types.map(t => `<option value="${t}">${t.charAt(0).toUpperCase()+t.slice(1)}</option>`).join('');
+    updateProductOptions();
+  }
+  function updateProductOptions(){
+    const list = productMeta[animalSel().value] || [];
+    productSel().innerHTML = list.map(p => `<option value="${p.v}">${p.label}</option>`).join('');
+  }
+  document.addEventListener('change', e => { if (e.target && e.target.id === 'animal') updateProductOptions(); });
+
+  function calcRate(){
+    const prodKey = productSel().value;
+    const meta = rateMeta.find(r => r.key === prodKey);
+    if (!meta) return;
+    const base = state.rates[prodKey];
+    const qty = Math.max(1, parseFloat(document.getElementById('qty').value) || 1);
+    const cityFactor = parseFloat(document.getElementById('city').value);
+    const bulkAdj = qty > 40 ? 0.95 : qty > 15 ? 0.98 : 1.0;
+    const seasonalAdj = 1 + (Math.sin(new Date().getMonth()) * 0.015);
+    const unitRate = Math.round(base * cityFactor * bulkAdj * seasonalAdj);
+    const total = Math.round(unitRate * qty);
+    document.getElementById('figureNum').innerHTML = `Rs ${total.toLocaleString('en-PK')} <span>(≈ Rs ${unitRate.toLocaleString('en-PK')} / unit)</span>`;
+    document.getElementById('rateNote').textContent = `AI estimate for ${qty} unit(s) of ${meta.label.toLowerCase()} — adjusted for city tier and quantity discount.`;
+  }
+
+  function scrollToId(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+  /* ---------------- Admin gate ---------------- */
+  function openGate(){ document.getElementById('gate').hidden = false; document.getElementById('gateCode').focus(); }
+  function closeGate(){ document.getElementById('gate').hidden = true; }
+  function checkGate(){
+    const val = document.getElementById('gateCode').value.trim().toLowerCase();
+    if (val === 'farmghar'){ closeGate(); goAdmin(); }
+    else { document.getElementById('gateCode').style.borderColor = '#C25A45'; document.getElementById('gateCode').value=''; document.getElementById('gateCode').placeholder='Try again'; }
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter' && !document.getElementById('gate').hidden) checkGate(); });
+
+  /* ---------------- View switching (public <-> admin) ---------------- */
+  function goAdmin(){
+    document.getElementById('publicPage').hidden = true;
+    document.getElementById('adminPage').hidden = false;
+    renderAdmin();
+    window.scrollTo(0,0);
+  }
+  function goPublic(){
+    document.getElementById('adminPage').hidden = true;
+    document.getElementById('publicPage').hidden = false;
+    renderPublic();
+    window.scrollTo(0,0);
+  }
+  function showAdView(id, btn){
+    document.querySelectorAll('.adview').forEach(v => v.classList.remove('active'));
+    document.getElementById('adview-' + id).classList.add('active');
+    document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  /* ---------------- Render: ADMIN ---------------- */
+  function renderAdmin(){
+    renderOverview(); renderLivestock(); renderStaff(); renderRates();
+  }
+  function renderOverview(){
+    const totalCattle = state.livestock.filter(l=>l.type==='cattle').reduce((s,l)=>s+l.count,0);
+    const totalGoat = state.livestock.filter(l=>l.type==='goat').reduce((s,l)=>s+l.count,0);
+    const totalPoultry = state.livestock.filter(l=>l.type==='poultry').reduce((s,l)=>s+l.count,0);
+    const present = state.todayStatus.filter(Boolean).length;
+    const cards = [
+      {label:"Cattle on farm", value: totalCattle, delta:"synced to public site"},
+      {label:"Goats on farm", value: totalGoat, delta:"synced to public site"},
+      {label:"Poultry birds", value: totalPoultry.toLocaleString('en-PK'), delta:"synced to public site"},
+      {label:"Staff on roll", value: state.staff.length, delta: present + " present today"}
+    ];
+    document.getElementById('overviewStats').innerHTML = cards.map(c => `
+      <div class="stat-card"><div class="label">${c.label}</div><div class="value">${c.value}</div><div class="delta">${c.delta}</div></div>`).join('');
+    document.getElementById('ovPresent').textContent = `${present} / ${state.staff.length}`;
+    document.getElementById('bannerSub').textContent = `Chak Road, Punjab — ${totalCattle} cattle · ${totalGoat} goats · ${totalPoultry.toLocaleString('en-PK')} birds · ${state.staff.length} staff`;
+  }
+  function renderLivestock(){
+    document.getElementById('lvBody').innerHTML = state.livestock.map((l, i) => `
+      <tr>
+        <td class="row-name">${l.name}</td><td><span class="tag ${l.type}">${l.type}</span></td><td class="mono">${l.count}</td><td>${l.output}</td><td class="mono">${l.yield}</td>
+        <td><button class="icon-btn" onclick="removeLivestock(${i})" title="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></td>
+      </tr>`).join('');
+  }
+  function addLivestock(){
+    const name = document.getElementById('lv-name').value.trim() || 'Unnamed batch';
+    const type = document.getElementById('lv-type').value;
+    const count = Math.max(1, parseInt(document.getElementById('lv-count').value) || 1);
+    const output = document.getElementById('lv-output').value;
+    const yieldv = document.getElementById('lv-yield').value.trim() || '—';
+    state.livestock.push({name, type, count, output, yield: yieldv});
+    document.getElementById('lv-name').value = ''; document.getElementById('lv-yield').value = '';
+    renderLivestock(); renderOverview(); saveState();
+  }
+  function removeLivestock(i){ state.livestock.splice(i,1); renderLivestock(); renderOverview(); saveState(); }
+
+  function renderStaff(){
+    document.getElementById('stBody').innerHTML = state.staff.map((e, i) => {
+      const isPresent = state.todayStatus[i];
+      const monthly = e.rate * e.present;
+      return `<tr>
+        <td class="row-name"><span class="thumb" style="background:${e.color};">${initials(e.name)}</span>${e.name}</td>
+        <td>${e.role}</td><td class="mono">Rs ${e.rate}</td>
+        <td><div class="toggle"><button class="${isPresent?'active p':''}" onclick="setStatus(${i}, true)">P</button><button class="${!isPresent?'active a':''}" onclick="setStatus(${i}, false)">A</button></div></td>
+        <td class="mono">${e.present} / 26</td><td class="salary">Rs ${monthly.toLocaleString('en-PK')}</td>
+        <td><button class="icon-btn" onclick="removeStaff(${i})" title="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></td>
+      </tr>`;
+    }).join('');
+    const payable = state.staff.reduce((sum, e, i) => sum + (state.todayStatus[i] ? e.rate : 0), 0);
+    document.getElementById('payrollTotal').textContent = `Payable today: Rs ${payable.toLocaleString('en-PK')}`;
+    renderOverview();
+  }
+  function setStatus(i, val){
+    const was = state.todayStatus[i];
+    state.todayStatus[i] = val;
+    if (was !== val){ state.staff[i].present = Math.max(0, Math.min(26, state.staff[i].present + (val ? 1 : -1))); }
+    renderStaff(); saveState();
+  }
+  function addStaff(){
+    const name = document.getElementById('st-name').value.trim();
+    const role = document.getElementById('st-role').value.trim() || 'Farm Hand';
+    const rate = Math.max(0, parseInt(document.getElementById('st-rate').value) || 0);
+    if (!name) { document.getElementById('st-name').focus(); return; }
+    state.staff.push({name, role, rate, present:0, color: palette[state.staff.length % palette.length]});
+    state.todayStatus.push(false);
+    document.getElementById('st-name').value = ''; document.getElementById('st-role').value = '';
+    renderStaff(); saveState();
+  }
+  function removeStaff(i){ state.staff.splice(i,1); state.todayStatus.splice(i,1); renderStaff(); saveState(); }
+
+  function renderRates(){
+    document.getElementById('ratesGrid').innerHTML = rateMeta.map(r => `
+      <div class="rate-field"><div class="rf-label">${r.label}</div><div class="rf-sub">${r.sub}</div>
+        <div class="rf-row"><span>Rs</span><input type="number" id="rate-${r.key}" value="${state.rates[r.key]}" min="0"></div></div>`).join('');
+  }
+  function saveRates(){
+    rateMeta.forEach(r => { state.rates[r.key] = parseInt(document.getElementById('rate-' + r.key).value) || state.rates[r.key]; });
+    saveState();
+    const btn = event.target; const original = btn.textContent;
+    btn.textContent = "✓ Saved & synced to site";
+    setTimeout(() => btn.textContent = original, 1600);
+  }
+
+  function exportData(){
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'farmghar-data.json'; a.click();
+    URL.revokeObjectURL(url);
+  }
+  function importData(event){
+    const file = event.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try{ state = JSON.parse(e.target.result); renderAll(); saveState(); }
+      catch(err){ alert('Could not read that file — please choose a FarmGhar export JSON.'); }
+    };
+    reader.readAsText(file);
+  }
+
+  function renderAll(){ renderPublic(); renderAdmin(); }
+
+  loadState();
+</script>
+
+</body>
+</html>
