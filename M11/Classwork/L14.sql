@@ -121,3 +121,5 @@ SELECT
 FROM Sales
 JOIN Products
     ON Sales.Product_id = Products.Product_id;
+
+

@@ -27,7 +27,7 @@ CREATE TABLE Customer (
 
 INSERT INTO Customer (Customer_id, name, city, grade, Salesman_id) VALUES
 ('C001', 'Alice Brown', 'New York', 'A', 'S001'),
-('C002', 'Bob White', 'sialkot', 'B', 'S002'),
+('C002', 'Bob White', 'Sialkot', 'B', 'S002'),
 ('C003', 'Charlie Green', 'Chicago', 'A', 'S003'),
 ('C004', 'Diana Black', 'Chicago', 'C', 'S004'),
 ('C005', 'Ethan Blue', 'Phoenix', 'B', 'S005');
@@ -84,3 +84,45 @@ JOIN Customer
 JOIN Salesman
     ON Orders.Salesman_id = Salesman.Salesman_id
 WHERE LOWER(Customer.city) <> LOWER(Salesman.city);
+
+
+-- 4. Show order number and customer name
+
+SELECT
+    Orders.ord_no,
+    Customer.name AS Customer_Name
+FROM Orders
+JOIN Customer
+    ON Orders.Customer_id = Customer.Customer_id;
+
+
+-- 5. Show customer name and grade
+
+SELECT
+    Customer.name AS Customer_Name,
+    Customer.grade
+FROM Customer;
+
+
+-- 6. Customers whose salesman's commission is between 0.12 and 0.14
+
+SELECT
+    Customer.name AS Customer_Name,
+    Salesman.name AS Salesman_Name,
+    Salesman.commission
+FROM Customer
+JOIN Salesman
+    ON Customer.Salesman_id = Salesman.Salesman_id
+WHERE Salesman.commission BETWEEN 0.12 AND 0.14;
+
+SELECT  Orders.ord_no, Customer.name, salesman.commission AS
+"Commission%" ,
+Orders.purch_amt * Salesman.commission AS "Commission Amount"
+FROM Orders
+JOIN Salesman ON Orders.salesman_id = Salesman.salesman_id
+JOIN Customer ON Orders.Customer_id = Customer.Customer_id
+WHERE Customer.grade >= 'B';
+
+SELECT * FROM Customer
+Join Orders on Customer.Customer_id = Orders.Customer_id
+Where Orders.ord_date = '2023-02-20';
