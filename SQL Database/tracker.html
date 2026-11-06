@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WiFi Device Tracker - Live Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
+    .header {
+      background: #1e293b;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+    }
+    .header h1 { font-size: 1.4rem; }
+    .status { color: #22c55e; font-size: 0.9rem; }
+    .container { display: flex; height: calc(100vh - 70px); }
+    #map { flex: 1; }
+    .sidebar {
+      width: 320px;
+      background: #1e293b;
+      border-left: 1px solid #334155;
+      overflow-y: auto;
+      padding: 16px;
+    }
+    .device-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .device-card:hover { border-color: #3b82f6; }
+    .device-card.active { border-color: #22c55e; background: #14532d22; }
+    .device-name { font-weight: 600; margin-bottom: 4px; }
+    .device-info { font-size: 0.85rem; color: #94a3b8; }
+    .online { color: #22c55e; }
+    .offline { color: #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📡 WiFi Device Tracker</h1>
+    <div class="status">● Live • Local Network</div>
+  </div>
+
+  <div class="container">
+    <div id="map"></div>
+    <div class="sidebar" id="deviceList"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Initialize map (default: Lahore area - change to your location)
+    const map = L.map('map').setView([31.5204, 74.3587], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Mock devices (baad vich real data aavega)
+    let devices = [
+      { id: 1, name: "iPhone 15 - Baba", ip: "192.168.1.10", mac: "AA:BB:CC:11:22:33", lat: 31.5210, lng: 74.3590, online: true },
+      { id: 2, name: "Samsung Farm Cam", ip: "192.168.1.25", mac: "DD:EE:FF:44:55:66", lat: 31.5195, lng: 74.3575, online: true },
+      { id: 3, name: "Laptop - Design", ip: "192.168.1.15", mac: "11:22:33:AA:BB:CC", lat: 31.5208, lng: 74.3602, online: true },
+      { id: 4, name: "Tractor Tracker", ip: "192.168.1.40", mac: "77:88:99:00:11:22", lat: 31.5180, lng: 74.3560, online: false },
+    ];
+
+    const markers = {};
+
+    function renderDevices() {
+      const list = document.getElementById('deviceList');
+      list.innerHTML = '';
+
+      devices.forEach(device => {
+        // Marker
+        if (markers[device.id]) {
+          markers[device.id].setLatLng([device.lat, device.lng]);
+        } else {
+          const marker = L.marker([device.lat, device.lng])
+            .addTo(map)
+            .bindPopup(`<b>${device.name}</b><br>${device.ip}`);
+          markers[device.id] = marker;
+        }
+
+        // Sidebar card
+        const card = document.createElement('div');
+        card.className = 'device-card';
+        card.innerHTML = `
+          <div class="device-name">${device.name}</div>
+          <div class="device-info">
+            IP: ${device.ip}<br>
+            MAC: ${device.mac}<br>
+            <span class="${device.online ? 'online' : 'offline'}">
+              ${device.online ? '● Online' : '○ Offline'}
+            </span>
+          </div>
+        `;
+        card.onclick = () => {
+          map.setView([device.lat, device.lng], 17);
+          markers[device.id].openPopup();
+        };
+        list.appendChild(card);
+      });
+    }
+
+    renderDevices();
+
+    // Simulate live movement (demo only)
+    setInterval(() => {
+      devices.forEach(d => {
+        if (d.online) {
+          d.lat += (Math.random() - 0.5) * 0.0003;
+          d.lng += (Math.random() - 0.5) * 0.0003;
+        }
+      });
+      renderDevices();
+    }, 3000);
+  </script>
+</body>
+</html>

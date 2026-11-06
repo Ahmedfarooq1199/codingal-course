@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operation Crossfire – Call of Duty Tournament</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Barlow:wght@400;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1d2219;--panel:#272e22;--line:#4a5440;--sand:#e3d9b8;--mute:#a49f86;--flare:#ff6a1a;--steel:#8fa3ad}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--sand);font:17px/1.6 Barlow,sans-serif}
+h1,h2{font-family:'Saira Stencil One',Impact,sans-serif;font-weight:400;letter-spacing:.02em}
+h3,.cond{font-family:'Barlow Condensed',sans-serif;font-weight:700}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--flare);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;background:#1d2219ee;border-bottom:1px solid var(--line);z-index:5}
+nav .wrap{display:flex;gap:22px;align-items:center;height:54px}
+nav b{font-family:'Saira Stencil One';margin-right:auto;font-size:20px}
+nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--sand)}
+.hero{padding:90px 0 70px;border-bottom:1px solid var(--line);background:
+ repeating-linear-gradient(135deg,transparent 0 22px,#ffffff06 22px 44px)}
+.hero h1{font-size:clamp(46px,10vw,116px);line-height:.95}
+.hero h1 span{display:block;color:var(--flare)}
+.hero p{max-width:52ch;margin:22px 0 30px;color:var(--mute);font-size:19px}
+.btn{display:inline-block;background:var(--flare);color:#1d2219;font:700 20px 'Barlow Condensed';padding:12px 28px;border:0;cursor:pointer;text-decoration:none}
+.btn:hover{background:#ff8444}
+.facts{display:flex;flex-wrap:wrap;gap:34px;margin-top:44px}
+.facts div{border-left:3px solid var(--flare);padding-left:14px}
+.facts b{display:block;font:400 34px 'Saira Stencil One'}
+.facts small{color:var(--mute)}
+section{padding:70px 0;border-bottom:1px solid var(--line)}
+h2{font-size:40px;margin-bottom:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px;background:var(--line);border:1px solid var(--line)}
+.grid>div{background:var(--panel);padding:22px}
+.grid h3{font-size:24px;margin-bottom:6px}.grid p{color:var(--mute);font-size:16px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font:700 15px 'Barlow Condensed';color:var(--mute)}
+tr:first-child td{color:var(--flare)}
+.scroll{overflow-x:auto}
+.slots{margin-bottom:12px;color:var(--mute)}
+form{display:grid;gap:16px;max-width:560px}
+label{display:grid;gap:6px;font-weight:600}
+input,select{background:var(--panel);border:1px solid var(--line);color:var(--sand);padding:11px;font:inherit}
+#msg{min-height:26px;font-weight:600}.ok{color:#9fd67a}.err{color:#ff8b73}
+footer{padding:30px 0;color:var(--mute);font-size:15px}
+@media (prefers-reduced-motion:no-preference){.hero h1 span{animation:in .7s ease-out}@keyframes in{from{opacity:0;transform:translateX(-24px)}}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><b>CROSSFIRE</b><a href="#format">Format</a><a href="#standings">Standings</a><a href="#register">Register</a></div></nav>
+
+<header class="hero"><div class="wrap">
+  <h1>Operation<span>Crossfire</span></h1>
+  <p>A 4v4 Call of Duty tournament. Thirty-two squads enter, one walks out with the prize pool. Register your team before slots run out.</p>
+  <a class="btn" href="#register">Register your squad</a>
+  <div class="facts">
+    <div><b>$5,000</b><small>Prize pool</small></div>
+    <div><b>32</b><small>Squads</small></div>
+    <div><b>4v4</b><small>Hardpoint, S&amp;D, Control</small></div>
+    <div><b>Dec 12–13</b><small>Online, cross-platform</small></div>
+  </div>
+</div></header>
+
+<section id="format"><div class="wrap">
+  <h2>Match format</h2>
+  <div class="grid">
+    <div><h3>Group stage</h3><p>Eight groups of four. Every squad plays three best-of-3 matches. Top two advance.</p></div>
+    <div><h3>Knockout</h3><p>Sixteen squads, single elimination. Quarter-finals and semi-finals are best-of-3.</p></div>
+    <div><h3>Grand final</h3><p>Best-of-5 across Hardpoint, Search &amp; Destroy and Control, streamed live.</p></div>
+    <div><h3>Rules</h3><p>Squads of 4 plus 1 sub. Standard competitive ruleset. No scripts or macros. Admins make final calls.</p></div>
+  </div>
+</div></section>
+
+<section id="standings"><div class="wrap">
+  <h2>Standings</h2>
+  <div class="slots" id="slots">Loading squads…</div>
+  <div class="scroll"><table>
+    <thead><tr><th>#</th><th>Squad</th><th>Platform</th><th>W</th><th>L</th><th>Kills</th></tr></thead>
+    <tbody id="rows"><tr><td colspan="6">No squads registered yet. Be the first.</td></tr></tbody>
+  </table></div>
+</div></section>
+
+<section id="register"><div class="wrap">
+  <h2>Register your squad</h2>
+  <form id="reg" novalidate>
+    <label>Team name<input name="name" maxlength="30" required></label>
+    <label>Captain's gamertag<input name="captain" maxlength="30" required></label>
+    <label>Contact email<input name="email" type="email" maxlength="80" required></label>
+    <label>Platform<select name="platform" required><option value="">Choose one</option><option>PC</option><option>PlayStation</option><option>Xbox</option></select></label>
+    <label>Squad gamertags (4 players + 1 sub, comma separated)<input name="members" maxlength="150" required></label>
+    <button class="btn" type="submit">Lock in squad</button>
+    <div id="msg" role="status" aria-live="polite"></div>
+  </form>
+</div></section>
+
+<footer><div class="wrap">Not affiliated with or endorsed by Activision. Call of Duty is a trademark of its owner.</div></footer>
+
+<script>
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function load(){
+  try{
+    const {teams,max} = await (await fetch('/api/teams')).json();
+    document.getElementById('slots').textContent = `${teams.length} of ${max} squads registered`;
+    if(teams.length) document.getElementById('rows').innerHTML = teams.map((t,i)=>
+      `<tr><td>${i+1}</td><td>${esc(t.name)}</td><td>${esc(t.platform)}</td><td>${t.wins}</td><td>${t.losses}</td><td>${t.kills}</td></tr>`).join('');
+  }catch{ document.getElementById('slots').textContent = 'Could not load standings. Refresh to try again.'; }
+}
+document.getElementById('reg').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const msg = document.getElementById('msg');
+  msg.className=''; msg.textContent='Submitting…';
+  try{
+    const res = await fetch('/api/register',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error);
+    msg.className='ok'; msg.textContent='Squad registered. See you on the battlefield.';
+    e.target.reset(); load();
+  }catch(err){ msg.className='err'; msg.textContent=err.message||'Registration failed.'; }
+});
+load();
+</script>
+</body>
+</html>
